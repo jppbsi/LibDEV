@@ -8,7 +8,7 @@ CC=gcc
 FLAGS=  -g -O0
 CFLAGS=''
 
-all: libdev
+all: libdev OPFknn
 
 libdev: $(LIB)/libdev.a
 	echo "libdev.a built..."
@@ -29,6 +29,10 @@ $(OBJ)/dev.o: $(SRC)/dev.c
 $(OBJ)/_opf_.o: $(SRC)/_opf_.c
 	$(CC) $(FLAGS) -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
     -L $(OPF_DIR)/lib -c $(SRC)/_opf_.c -o $(OBJ)/_opf_.o -lopf
+    
+OPFknn: examples/OPF/OPFknn.c
+	$(CC) $(FLAGS) examples/OPF/OPFknn.c -o examples/bin/OPFknn -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -L $(OPF_DIR)/lib -L $(LIB) -lopf -lm;
 
 clean:
 	rm -f $(LIB)/lib*.a; rm -f $(OBJ)/*.o
