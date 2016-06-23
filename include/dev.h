@@ -8,6 +8,9 @@ extern "C" {
 /* LibOPF */
 #include "OPF.h"
 
+/* LibOPT */
+#include "common.h"
+
 #ifdef __cplusplus
 }
 #endif

@@ -6,5 +6,16 @@ int main(int argc, char **argv){
         exit(-1);
     }
     
+    SearchSpace *s = NULL;
+    
+    s = CreateSearchSpace(100, 1, _PSO_);
+    s->w = 1.4;
+    s->c1 = 1.4;
+    s->c2 = 0.6;
+    s->iterations = 10;
+    
+    
+    DestroySearchSpace(&s);
+    
     return 0;
 }
