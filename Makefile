@@ -31,7 +31,7 @@ $(OBJ)/_opf_.o: $(SRC)/_opf_.c
     
 OPFknn: examples/OPF/OPFknn.c
 	$(CC) $(FLAGS) examples/OPF/OPFknn.c -o examples/bin/OPFknn -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
-    -I $(OPT_DIR)/include -L $(OPF_DIR)/lib -L $(OPT_DIR)/lib -L $(LIB) -lopf -lopt-plus -lm;
+    -I $(OPT_DIR)/include -L $(OPF_DIR)/lib -L $(OPT_DIR)/lib -L $(LIB) -lopf -lopt-plus -ldev -lm;
 
 clean:
 	rm -f $(LIB)/lib*.a; rm -f $(OBJ)/*.o; rm -rf examples/bin/*

@@ -4,7 +4,7 @@
 #include "dev.h"
 
 /* Supervised OPF with k-nn adjacency relation */
-double opfknn_LearningK(Subgraph *Train, Subgraph *Val, int k); /* It learns the k-neighbourhod size (parameter k) */
+double opfknn_LearningK(Agent *a, ...); /* It learns the k-neighbourhod size (parameter k) */
 /***********************************************/
 
 #endif

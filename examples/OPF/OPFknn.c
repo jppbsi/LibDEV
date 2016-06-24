@@ -8,6 +8,10 @@ int main(int argc, char **argv){
     
     SearchSpace *s = NULL;
     int kmax = atoi(argv[3]);
+    Subgraph *Train = NULL, *Val = NULL;
+    
+    Train = ReadSubgraph(argv[1]);
+    Val = ReadSubgraph(argv[2]);
     
     s = CreateSearchSpace(100, 1, _PSO_);
     s->w = 1.4;
@@ -17,9 +21,12 @@ int main(int argc, char **argv){
     s->LB[0] = 1;
     s->UB[0] = kmax;
     
-    InitializeSearchSpace(s, _PSO_); /* It initalizes the search space */
+    InitializeSearchSpace(s, _PSO_);
+    runPSO(s, opfknn_LearningK, Train, Val);
     
-    DestroySearchSpace(&s);
+    DestroySearchSpace(&s, _PSO_);
+    DestroySubgraph(&Train);
+    DestroySubgraph(&Val);
     
     return 0;
 }

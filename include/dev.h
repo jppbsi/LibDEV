@@ -9,7 +9,10 @@ extern "C" {
 #include "OPF.h"
 
 /* LibOPT */
-#include "common.h"
+#include "opt.h"
+#include "pso.h"
+
+#include "_opf_.h"
 
 #ifdef __cplusplus
 }
