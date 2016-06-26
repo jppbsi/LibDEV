@@ -7,19 +7,17 @@ Parameters:
 k: neighborhood size
 Train: training graph
 Val: validating graph */
-double opfknn_LearningK(Agent *a, ...){
+double opfknn_LearningK(Agent *a, va_list arg){
     double error;
-    va_list arg;
     int k;
     Subgraph *Train = NULL, *Val = NULL;
-    
-    va_start(arg, a);
-    
+        
     Train = va_arg(arg, Subgraph *);
     Val = va_arg(arg, Subgraph *);
     k = a->x[0];
     
     Train->bestk = k;
+    
     opf_CreateArcs(Train, Train->bestk);
     opf_PDF(Train);
     opf_OPFClustering4SupervisedLearning(Train);
