@@ -16,10 +16,12 @@ libdev: $(LIB)/libdev.a
 $(LIB)/libdev.a: \
 $(OBJ)/dev.o \
 $(OBJ)/_opf_.o \
+$(OBJ)/_dbn_.o \
 
 	ar csr $(LIB)/libdev.a \
 $(OBJ)/dev.o \
 $(OBJ)/_opf_.o \
+$(OBJ)/_dbn_.o \
 
 $(OBJ)/dev.o: $(SRC)/dev.c
 	$(CC) $(FLAGS) -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
@@ -28,6 +30,10 @@ $(OBJ)/dev.o: $(SRC)/dev.c
 $(OBJ)/_opf_.o: $(SRC)/_opf_.c
 	$(CC) $(FLAGS) -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
     -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -c $(SRC)/_opf_.c -o $(OBJ)/_opf_.o
+
+$(OBJ)/_dbn_.o: $(SRC)/_dbn_.c
+	$(CC) $(FLAGS) -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -c $(SRC)/_dbn_.c -o $(OBJ)/_dbn_.o
     
 OPFknn: examples/OPF/OPFknn.c
 	$(CC) $(FLAGS) examples/OPF/OPFknn.c -o examples/bin/OPFknn -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \

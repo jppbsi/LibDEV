@@ -14,8 +14,15 @@ extern "C" {
 /* LibOPT */
 #include "opt.h"
 #include "pso.h"
+#include "ba.h"
+#include "fpa.h"
+#include "fa.h"
+#include "cs.h"
+#include "gp.h"
+#include "bha.h"
 
 #include "_opf_.h"
+#include "_dbn_.h"
 
 #ifdef __cplusplus
 }
