@@ -8,6 +8,9 @@ extern "C" {
 /* LibOPF */
 #include "OPF.h"
 
+/* LibDEEP */
+#include "deep.h"
+
 /* LibOPT */
 #include "opt.h"
 #include "pso.h"

@@ -23,15 +23,15 @@ $(OBJ)/_opf_.o \
 
 $(OBJ)/dev.o: $(SRC)/dev.c
 	$(CC) $(FLAGS) -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
-    -I $(OPT_DIR)/include -c $(SRC)/dev.c -o $(OBJ)/dev.o
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -c $(SRC)/dev.c -o $(OBJ)/dev.o
 
 $(OBJ)/_opf_.o: $(SRC)/_opf_.c
 	$(CC) $(FLAGS) -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
-    -I $(OPT_DIR)/include -L $(OPF_DIR)/lib -L $(OPT_DIR)/lib -c $(SRC)/_opf_.c -o $(OBJ)/_opf_.o -lopf -lopt-plus
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -c $(SRC)/_opf_.c -o $(OBJ)/_opf_.o
     
 OPFknn: examples/OPF/OPFknn.c
 	$(CC) $(FLAGS) examples/OPF/OPFknn.c -o examples/bin/OPFknn -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
-    -I $(OPT_DIR)/include -L $(OPF_DIR)/lib -L $(OPT_DIR)/lib -L $(LIB) -lopf -lopt-plus -ldev -lm;
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -L $(OPF_DIR)/lib -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(LIB) -lopf -lDeep -lopt-plus -ldev -lm;
 
 clean:
 	rm -f $(LIB)/lib*.a; rm -f $(OBJ)/*.o; rm -rf examples/bin/*
