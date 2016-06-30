@@ -8,7 +8,7 @@ CC=gcc
 FLAGS=  -g -O0
 CFLAGS=''
 
-all: libdev OPFknn
+all: libdev OPFknn DBN DropoutDBN
 
 libdev: $(LIB)/libdev.a
 	echo "libdev.a built..."
@@ -38,6 +38,14 @@ $(OBJ)/_dbn_.o: $(SRC)/_dbn_.c
 OPFknn: examples/OPF/OPFknn.c
 	$(CC) $(FLAGS) examples/OPF/OPFknn.c -o examples/bin/OPFknn -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
     -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -L $(OPF_DIR)/lib -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(LIB) -lopf -lDeep -lopt-plus -ldev -lm;
+
+DBN: examples/DBN/DBN.c
+	$(CC) $(FLAGS) examples/DBN/DBN.c -o examples/bin/DBN -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -L $(OPF_DIR)/lib -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(LIB) -lopf -lDeep -lopt-plus -ldev -lgsl -lm;
+
+DropoutDBN: examples/DBN/DropoutDBN.c
+	$(CC) $(FLAGS) examples/DBN/DropoutDBN.c -o examples/bin/DropoutDBN -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -L $(OPF_DIR)/lib -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(LIB) -lopf -lDeep -lopt-plus -ldev -lgsl -lm;
 
 clean:
 	rm -f $(LIB)/lib*.a; rm -f $(OBJ)/*.o; rm -rf examples/bin/*
