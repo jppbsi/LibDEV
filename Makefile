@@ -36,16 +36,16 @@ $(OBJ)/_dbn_.o: $(SRC)/_dbn_.c
     -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -c $(SRC)/_dbn_.c -o $(OBJ)/_dbn_.o
     
 OPFknn: examples/OPF/OPFknn.c
-	$(CC) $(FLAGS) examples/OPF/OPFknn.c -o examples/bin/OPFknn -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
-    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -L $(OPF_DIR)/lib -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(LIB) -lopf -lDeep -lopt-plus -ldev -lm;
+	$(CC) $(FLAGS) examples/OPF/OPFknn.c -o examples/bin/OPFknn -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I $(INCLUDE) -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lOPF -lDeep -lopt-plus -lm;
 
 DBN: examples/DBN/DBN.c
 	$(CC) $(FLAGS) examples/DBN/DBN.c -o examples/bin/DBN -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
-    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -L $(OPF_DIR)/lib -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(LIB) -lopf -lDeep -lopt-plus -ldev -lgsl -lm;
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt-plus -lgsl -lgslcblas -lm;
 
 DropoutDBN: examples/DBN/DropoutDBN.c
 	$(CC) $(FLAGS) examples/DBN/DropoutDBN.c -o examples/bin/DropoutDBN -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
-    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -L $(OPF_DIR)/lib -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(LIB) -lopf -lDeep -lopt-plus -ldev -lgsl -lm;
+-I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt-plus -lgsl -lgslcblas -lm;
 
 clean:
 	rm -f $(LIB)/lib*.a; rm -f $(OBJ)/*.o; rm -rf examples/bin/*
