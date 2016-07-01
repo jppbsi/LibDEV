@@ -29,11 +29,11 @@ $(OBJ)/dev.o: $(SRC)/dev.c
 
 $(OBJ)/_opf_.o: $(SRC)/_opf_.c
 	$(CC) $(FLAGS) -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
-    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -c $(SRC)/_opf_.c -o $(OBJ)/_opf_.o
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -L $(OPF_DIR)/lib -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -c $(SRC)/_opf_.c -o $(OBJ)/_opf_.o -lopf -lDeep -lopt-plus
 
 $(OBJ)/_dbn_.o: $(SRC)/_dbn_.c
 	$(CC) $(FLAGS) -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
-    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -c $(SRC)/_dbn_.c -o $(OBJ)/_dbn_.o
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -L $(OPF_DIR)/lib -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -c $(SRC)/_dbn_.c -o $(OBJ)/_dbn_.o -lopf -lDeep -lopt-plus
     
 OPFknn: examples/OPF/OPFknn.c
 	$(CC) $(FLAGS) examples/OPF/OPFknn.c -o examples/bin/OPFknn -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
