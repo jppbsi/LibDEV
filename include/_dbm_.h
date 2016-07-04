@@ -5,7 +5,7 @@
 
 /* Deep Boltzmann Machines */
 
-double Bernoulli_BernoulliDBM4Reconstruction(Agent *a, va_list arg); /* It executes a Bernoulli-Berboulli DBM and returns the reconstruction error */
+double Bernoulli_BernoulliDBM4Reconstruction(Agent *a, va_list arg); /* It executes a Bernoulli-Bernoulli DBM and returns the reconstruction error */
 /***********************************************/
 
 #endif
