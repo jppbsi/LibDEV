@@ -92,6 +92,7 @@ int main(int argc, char **argv){
     for (i = 0; i < 2; i++)
         free(eta_bound[i]);
     free(eta_bound);
+    free(n_hidden_units);
     DestroySearchSpace(&s, _PSO_);
     DestroyDataset(&DatasetTrain);
     DestroyDataset(&DatasetTest);
