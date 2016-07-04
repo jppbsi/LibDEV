@@ -23,6 +23,7 @@ extern "C" {
 
 #include "_opf_.h"
 #include "_dbn_.h"
+#include "_dbm_.h"
 
 #ifdef __cplusplus
 }
