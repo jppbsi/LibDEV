@@ -291,11 +291,11 @@ double FeatureSelection(Agent *a, va_list arg){
     sgTest = optTransfer(Test,a->x);
     opf_OPFTraining(sgTrain);
     opf_OPFClassifying(sgTrain, sgTest);
-    classification_error = 1 - opf_Accuracy(sgTest);
+    classification_error = opf_Accuracy(sgTest);
         
     DestroySubgraph(&sgTrain);
     DestroySubgraph(&sgTest);
 
-    return classification_error;
+    return 1/classification_error;
 }
 /***********************************************/

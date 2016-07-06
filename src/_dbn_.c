@@ -4,7 +4,7 @@
 /* Note that a DBN with 1 layer is the same as a RBM (Restricted Boltzmann Machine) */
 
 /* It executes a Bernoulli-Bernoulli DBN and returns the reconstruction error
-Parameters: [g, op, L, Param, n_epochs, batch_size, n_gibbs_sampling, eta_bound]
+Parameters: [g, op, L, n_epochs, batch_size, n_gibbs_sampling, eta_bound]
 g: dataset in the OPF format
 op: 1 - CD | 2 - PCD | 3 - FPCD
 L: number of RBMs
@@ -12,7 +12,6 @@ n_epochs: number of epochs for training
 batch_size: size of the mini-batch
 n_gibbs_sampling: number of iterations for contrastive divergence
 eta_bound: learning rate boundaries matrix */
-
 double Bernoulli_BernoulliDBN4Reconstruction(Agent *a, va_list arg){
     int i, j, op, L, n_epochs, batch_size, n_gibbs_sampling, *n_hidden_units;
     double **eta_bound;
@@ -70,7 +69,7 @@ double Bernoulli_BernoulliDBN4Reconstruction(Agent *a, va_list arg){
 }
 
 /* It executes a Bernoulli-Bernoulli DBN with Dropout and returns the reconstruction error
-Parameters: [g, op, L, Param, n_epochs, batch_size, n_gibbs_sampling, eta_bound]
+Parameters: [g, op, L, n_epochs, batch_size, n_gibbs_sampling, eta_bound]
 g: dataset in the OPF format
 op: 1 - CD | 2 - PCD | 3 - FPCD
 L: number of RBMs
@@ -78,7 +77,6 @@ n_epochs: number of epochs for training
 batch_size: size of the mini-batch
 n_gibbs_sampling: number of iterations for contrastive divergence
 eta_bound: learning rate boundaries matrix */
-
 double Bernoulli_BernoulliDBN4ReconstructionWithDropout(Agent *a, va_list arg){
     int i, j, op, L, n_epochs, batch_size, n_gibbs_sampling, *n_hidden_units;
     double **eta_bound, *p, *q;

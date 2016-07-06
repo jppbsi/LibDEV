@@ -3,7 +3,7 @@
 /* Deep Boltzmann Machines */
 
 /* It executes a Bernoulli-Bernoulli DBM and returns the reconstruction error
-Parameters: [g, op, L, Param, n_epochs, batch_size, n_gibbs_sampling, eta_bound]
+Parameters: [g, op, L, n_epochs, batch_size, n_gibbs_sampling, eta_bound]
 g: dataset in the OPF format
 op: 1 - CD | 2 - PCD | 3 - FPCD
 L: number of RBMs
