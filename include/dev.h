@@ -26,6 +26,7 @@ extern "C" {
 #include "_dbm_.h"
 #include "_featureselection_.h"
 #include "_rbm_.h"
+#include "_regression_.h"
 
 #ifdef __cplusplus
 }
