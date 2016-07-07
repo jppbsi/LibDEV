@@ -69,4 +69,25 @@ double LinearRegression_Optimization(Agent *a, va_list arg){
     
     return error;
 }
+
+/* Logistic Regression */
+
+/* It fits a logistic regression model as the error function optimized by an optimization technique
+Parameters: [g, w]
+g: training graph
+w: parameters of the linear function */
+double LogisticRegression_Optimization(Agent *a, va_list arg){
+    int i, j;
+    double alpha, error, *w;
+    Subgraph *g = NULL;
+    
+    g = va_arg(arg, Subgraph *);
+    w = va_arg(arg, double *);
+    
+    alpha = a->x[0];
+   
+    error = LogisticRegression_Fitting(g, alpha, w);
+    
+    return error;
+}
 /***********************************************/

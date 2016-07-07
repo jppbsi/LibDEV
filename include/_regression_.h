@@ -10,6 +10,7 @@ void LoadData(char *fileName, double ***X, double **Y, int *m, int *n); /* It lo
 double LinearRegression_Optimization(Agent *a, va_list arg); /* It fits a linear regression model as the error function optimized by an optimization technique */
 
 /* Logistic Regression */
+double LogisticRegression_Optimization(Agent *a, va_list arg); /* It fits a logistic regression model as the error function optimized by an optimization technique */
 /***********************************************/
 
 #endif

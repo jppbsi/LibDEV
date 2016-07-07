@@ -1,0 +1,3 @@
+10 1 10 #<n_particles> <dimension> <max_iterations>
+1.5 0.8 #<beta> <p>
+0 0.01 #<LB> <UB> learning rate
