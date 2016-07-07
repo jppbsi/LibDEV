@@ -48,6 +48,8 @@ int main(int argc, char **argv){
     fprintf(stderr, "Ok!\n");
 
     free(w);
+    for (i = 0; i < m; i++)
+	free(X[i]);
     free(X);
     free(Y);
     DestroySearchSpace(&s, _PSO_);
