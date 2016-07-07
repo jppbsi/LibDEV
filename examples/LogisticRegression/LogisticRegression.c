@@ -18,7 +18,6 @@ int main(int argc, char **argv){
     
     LoadData(argv[1], &XTrain, &YTrain, &m_train, &n_train);
     LoadData(argv[1], &XTest, &YTest, &m_test, &n_test);
-    w = (double *)calloc(n_train, sizeof(double));
     
     /* mapping training data to LibOPF format */
     Train = CreateSubgraph(m_train);
