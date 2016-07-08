@@ -8,7 +8,7 @@ CC=gcc
 FLAGS=  -g -O0
 CFLAGS=''
 
-all: libdev OPFknn OPFcluster DBN DropoutDBN DBM FeatureSelection DRBM LinearRegression LogisticRegression
+all: libdev OPFknn OPFcluster DBN DropoutDBN DBM FeatureSelection DRBM GaussianDRBM LinearRegression LogisticRegression
 
 libdev: $(LIB)/libdev.a
 	echo "libdev.a built..."
@@ -85,6 +85,10 @@ FeatureSelection: examples/FeatureSelection/FeatureSelection.c
 
 DRBM: examples/RBM/DRBM.c
 	$(CC) $(FLAGS) examples/RBM/DRBM.c -o examples/bin/DRBM -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt-plus -lgsl -lgslcblas -lm;
+
+GaussianDRBM: examples/RBM/GaussianDRBM.c
+	$(CC) $(FLAGS) examples/RBM/GaussianDRBM.c -o examples/bin/GaussianDRBM -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
     -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt-plus -lgsl -lgslcblas -lm;
 
 LinearRegression: examples/LinearRegression/LinearRegression.c
