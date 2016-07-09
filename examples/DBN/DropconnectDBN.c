@@ -2,7 +2,7 @@
 
 int main(int argc, char **argv){
     if(argc != 12){
-        fprintf(stderr,"\nUsage: DropoutDBN <training set> <testing set> <output results file name> <cross-validation iteration number> \
+        fprintf(stderr,"\nUsage: DropconnectDBN <training set> <testing set> <output results file name> <cross-validation iteration number> \
                 <search space configuration file> <output best parameters file name> <n_epochs> <batch_size> \
                 <number of iterations for Constrastive Divergence> <1 - CD | 2 - PCD | 3 - FPCD> <number of DBN layers>");
         exit(-1);
@@ -12,7 +12,7 @@ int main(int argc, char **argv){
     int i, j, z;
     int iteration = atoi(argv[4]), n_epochs = atoi(argv[7]), batch_size = atoi(argv[8]), n_gibbs_sampling = atoi(argv[9]), op = atoi(argv[10]);
     int n_layers = atoi(argv[11]), *n_hidden_units;
-    double **eta_bound, errorTrain, errorTest, *p, *q;
+    double **eta_bound, errorTrain, errorTest, *p;
     FILE *f = NULL;
     Subgraph *Train = NULL, *Test = NULL;
     Dataset *DatasetTrain = NULL, *DatasetTest = NULL;
@@ -32,7 +32,7 @@ int main(int argc, char **argv){
     for (i = 0; i < n_layers; i++){
         eta_bound[0][i] = s->LB[z];
         eta_bound[1][i] = s->UB[z];
-        z+=6;
+        z+=5;
     }
     
     fprintf(stderr,"\nInitializing search space ... ");
@@ -40,42 +40,40 @@ int main(int argc, char **argv){
     fprintf(stderr,"\nOk\n");
     
     fprintf(stderr,"\nRunning PSO ... ");
-    runPSO(s, Bernoulli_BernoulliDBN4ReconstructionWithDropout, Train, op, n_layers, n_epochs, batch_size, n_gibbs_sampling, eta_bound);
+    runPSO(s, Bernoulli_BernoulliDBN4ReconstructionWithDropconnect, Train, op, n_layers, n_epochs, batch_size, n_gibbs_sampling, eta_bound);
     
-    fprintf(stderr,"\n\nRunning Dropout DBN with best parameters on training set ... ");
+    fprintf(stderr,"\n\nRunning Dropconnect DBN with best parameters on training set ... ");
     n_hidden_units = (int *)calloc(n_layers, sizeof(int));
     j = 0;
     for(i = 0; i < n_layers; i++){
-        n_hidden_units[i] = s->g[j]; j+=6;
+        n_hidden_units[i] = s->g[j]; j+=5;
     } 
     d = CreateNewDBN(Train->nfeats, n_hidden_units, Train->nlabels, n_layers);
     InitializeDBN(d);
     j = 1;
     p = (double *)calloc(n_layers, sizeof(double));
-    q = (double *)calloc(n_layers, sizeof(double));
     for(i = 0; i < d->n_layers; i++){
         d->m[i]->eta = s->g[j]; j++;
         d->m[i]->lambda = s->g[j]; j++;
         d->m[i]->alpha = s->g[j]; j++;
-        p[i] = s->g[j]; j++;
-        q[i] = s->g[j]; j+=2;
+        p[i] = s->g[j]; j+=2;
         d->m[i]->eta_min = eta_bound[0][i];
         d->m[i]->eta_max = eta_bound[1][i];
     }        
     switch (op){
         case 1:
-            errorTrain = BernoulliDBNTrainingbyContrastiveDivergenceWithDropout(DatasetTrain, d, n_epochs, n_gibbs_sampling, batch_size, p, q);
+            errorTrain = BernoulliDBNTrainingbyContrastiveDivergenceWithDropconnect(DatasetTrain, d, n_epochs, n_gibbs_sampling, batch_size, p);
         break;
         case 2:
-            errorTrain = BernoulliDBNTrainingbyPersistentContrastiveDivergenceWithDropout(DatasetTrain, d, n_epochs, n_gibbs_sampling, batch_size, p, q);
+            errorTrain = BernoulliDBNTrainingbyPersistentContrastiveDivergenceWithDropconnect(DatasetTrain, d, n_epochs, n_gibbs_sampling, batch_size, p);
         break;
         case 3:
-            errorTrain = BernoulliDBNTrainingbyFastPersistentContrastiveDivergenceWithDropout(DatasetTrain, d, n_epochs, n_gibbs_sampling, batch_size, p, q);
+            errorTrain = BernoulliDBNTrainingbyFastPersistentContrastiveDivergenceWithDropconnect(DatasetTrain, d, n_epochs, n_gibbs_sampling, batch_size, p);
         break;
     }
     
-    fprintf(stderr,"\n\nRunning Dropout DBN for reconstruction on testing set ... ");
-    errorTest = BernoulliDBNReconstructionWithDropout(DatasetTest, d, p, q);
+    fprintf(stderr,"\n\nRunning Dropconnect DBN for reconstruction on testing set ... ");
+    errorTest = BernoulliDBNReconstruction(DatasetTest, d);
     fprintf(stderr,"\nOK\n");
     
     fprintf(stderr,"\nTraining error: %lf\nTesting error: %lf\n", errorTrain, errorTest);
@@ -98,7 +96,6 @@ int main(int argc, char **argv){
     free(eta_bound);
     free(n_hidden_units);
     free(p);
-    free(q);
     DestroySearchSpace(&s, _PSO_);
     DestroyDataset(&DatasetTrain);
     DestroyDataset(&DatasetTest);
