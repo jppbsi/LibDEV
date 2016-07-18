@@ -1,18 +1,18 @@
 #include "dev.h"
 
 int main(int argc, char **argv){
-    if(argc != 11){
-        fprintf(stderr,"\nUsage: GaussianDRBM <training set> <testing set> <output results file name> <cross-validation iteration number> \
+    if(argc != 10){
+        fprintf(stderr,"\nUsage: DropoutDRBM <training set> <testing set> <output results file name> <cross-validation iteration number> \
                 <search space configuration file> <output best parameters file name> <n_epochs> <batch_size> \
-                <number of iterations for Constrastive Divergence> <variance value>");
+                <number of iterations for Constrastive Divergence>");
         exit(-1);
     }
     
     SearchSpace *s = NULL;
     int i, j, z;
-    int iteration = atoi(argv[4]), n_epochs = atoi(argv[7]), batch_size = atoi(argv[8]), n_gibbs_sampling = atoi(argv[9]), variance = atof(argv[10]);
+    int iteration = atoi(argv[4]), n_epochs = atoi(argv[7]), batch_size = atoi(argv[8]), n_gibbs_sampling = atoi(argv[9]);
     int n_hidden_units;
-    double errorTrain, errorTest, *sigma;
+    double errorTrain, errorTest, p, q;
     FILE *f = NULL;
     Subgraph *Train = NULL, *Test = NULL;
     Dataset *DatasetTrain = NULL, *DatasetTest = NULL;
@@ -29,20 +29,17 @@ int main(int argc, char **argv){
     InitializeSearchSpace(s, _PSO_);
     fprintf(stderr,"\nOk\n");
     
-    sigma = (double *)calloc(Train->nfeats, sizeof(double));
-    
-    for (i = 0; i < Train->nfeats; i++)
-        sigma[i] = variance;
-    
     fprintf(stderr,"\nRunning PSO ... ");
-    runPSO(s, Gaussian_BernoulliDRBM, Train, n_epochs, batch_size, n_gibbs_sampling, sigma);
+    runPSO(s, BernoulliDRBMWithDropout, Train, n_epochs, batch_size, n_gibbs_sampling);
     
-    fprintf(stderr,"\n\nRunning Gaussian DRBM with best parameters on training set ... ");
+    fprintf(stderr,"\n\nRunning Dropout DRBM with best parameters on training set ... ");
     n_hidden_units = (int)s->g[0];
-    m = CreateNewDRBM(Train->nfeats, n_hidden_units, Train->nlabels, sigma);
+    m = CreateRBM(Train->nfeats, n_hidden_units, Train->nlabels);
     m->eta = s->g[1];
     m->lambda = s->g[2];
     m->alpha = s->g[3];
+    p = s->g[4];
+    q = s->g[5];
 
     InitializeWeights(m);
     InitializeLabelWeights(m);    
@@ -50,9 +47,9 @@ int main(int argc, char **argv){
     InitializeBias4VisibleUnitsWithRandomValues(m);
     InitializeBias4LabelUnits(m);
 
-    errorTrain = DiscriminativeGaussianBernoulliRBMTrainingbyContrastiveDivergence(DatasetTrain, m, n_epochs, n_gibbs_sampling, batch_size);
+    errorTrain = DiscriminativeBernoulliRBMTrainingbyContrastiveDivergencewithDropout(DatasetTrain, m, n_epochs, n_gibbs_sampling, batch_size, p, q);
     
-    fprintf(stderr,"\n\nRunning Gaussian DRBM for classification on testing set ... ");
+    fprintf(stderr,"\n\nRunning Dropout DRBM for classification on testing set ... ");
     errorTest = DiscriminativeBernoulliRBMClassification(DatasetTest, m);
     fprintf(stderr,"\nOK\n");
     
@@ -71,13 +68,12 @@ int main(int argc, char **argv){
     fclose(f);
     fprintf(stderr, "Ok!\n");
         
-    free(sigma);
     DestroySearchSpace(&s, _PSO_);
     DestroyDataset(&DatasetTrain);
     DestroyDataset(&DatasetTest);
     DestroySubgraph(&Train);
     DestroySubgraph(&Test);
-    DestroyDRBM(&m);
+    DestroyRBM(&m);
     
     return 0;
 }
