@@ -10,8 +10,9 @@ int main(int argc, char **argv){
     
     SearchSpace *s = NULL;
     int i, j, z;
-    int iteration = atoi(argv[4]), n_epochs = atoi(argv[7]), batch_size = atoi(argv[8]), n_gibbs_sampling = atoi(argv[9]), variance = atof(argv[10]);
+    int iteration = atoi(argv[4]), n_epochs = atoi(argv[7]), batch_size = atoi(argv[8]), n_gibbs_sampling = atoi(argv[9]);
     int n_hidden_units;
+    double variance = atof(argv[10]);
     double errorTrain, errorTest, p, q, *sigma;
     FILE *f = NULL;
     Subgraph *Train = NULL, *Test = NULL;
