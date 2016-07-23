@@ -8,7 +8,7 @@ CC=gcc
 FLAGS=  -g -O0
 CFLAGS=''
 
-all: libdev OPFknn OPFcluster DBN DropoutDBN DropconnectDBN DBM FeatureSelection DRBM DropoutDRBM GaussianDRBM DropoutGaussianDRBM GaussianRBM DropoutGaussianRBM LinearRegression LogisticRegression
+all: libdev OPFknn OPFcluster DBN DBN_GP DropoutDBN DropconnectDBN DBM FeatureSelection DRBM DropoutDRBM GaussianDRBM DropoutGaussianDRBM GaussianRBM DropoutGaussianRBM LinearRegression LogisticRegression
 
 libdev: $(LIB)/libdev.a
 	echo "libdev.a built..."
@@ -69,6 +69,10 @@ OPFcluster: examples/OPF/OPFcluster.c
 
 DBN: examples/DBN/DBN.c
 	$(CC) $(FLAGS) examples/DBN/DBN.c -o examples/bin/DBN -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt-plus -lgsl -lgslcblas -lm;
+
+DBN_GP: examples/DBN/DBN_GP.c
+	$(CC) $(FLAGS) examples/DBN/DBN_GP.c -o examples/bin/DBN_GP -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
     -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt-plus -lgsl -lgslcblas -lm;
 
 DropoutDBN: examples/DBN/DropoutDBN.c
