@@ -20,15 +20,15 @@ int main(int argc, char **argv){
     s = ReadSearchSpaceFromFile(argv[3], _PSO_);
     optTransfer = S2TransferFunction;
     
-    fprintf(stderr,"\nInitializing search space ... ");
-    InitializeSearchSpace(s, _PSO_);
-    fprintf(stderr,"\nOk\n");
-    
     for (i = 0; i < Train->nfeats; i++){
 	s->LB[i] = 0;
 	s->UB[i] = 1;
     }
-
+    
+    fprintf(stderr,"\nInitializing search space ... ");
+    InitializeSearchSpace(s, _PSO_);
+    fprintf(stderr,"\nOk\n");
+    
     fflush(stderr); fprintf(stderr,"\nRunning PSO ... ");
     gettimeofday(&tic,NULL);
     runPSO(s, FeatureSelection, Train, Test, optTransfer);
