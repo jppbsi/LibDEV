@@ -296,6 +296,6 @@ double FeatureSelection(Agent *a, va_list arg){
     DestroySubgraph(&sgTrain);
     DestroySubgraph(&sgTest);
 
-    return 1/classification_error;
+    return 1-classification_error;
 }
 /***********************************************/
