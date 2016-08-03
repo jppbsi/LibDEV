@@ -2,7 +2,117 @@
 
 /* Restricted Boltzmann Machines */
 
-/* It executes a Bernoulli DRBM and returns the reconstruction error of the label unit
+/* It executes a Bernoulli RBM and returns the reconstruction error of the label unit
+Parameters: [g, op, n_epochs, n_gibbs_sampling, batch_size]
+g: dataset in the OPF format
+op: 1 - CD | 2 - PCD | 3 - FPCD
+n_epochs: numer of epochs for training
+n_gibbs_sampling: number of iterations for contrastive divergence
+batch_size: mini-batch size */
+double BernoulliRBM(Agent *a, va_list arg){
+    int op, n_hidden_units, n_epochs, n_gibbs_sampling, batch_size;
+    double reconstruction_error;
+    RBM *m = NULL;
+    Subgraph *g = NULL;
+    Dataset *D = NULL;
+    
+    /* reading input parameters */
+    g = va_arg(arg, Subgraph *);
+    op = va_arg(arg,int);
+    n_epochs = va_arg(arg,int);
+    batch_size = va_arg(arg,int);
+    n_gibbs_sampling = va_arg(arg,int);
+    
+    n_hidden_units = a->x[0];
+    m = CreateRBM(g->nfeats, n_hidden_units, g->nlabels);
+    m->eta = a->x[1];
+    m->lambda = a->x[2];
+    m->alpha = a->x[3];
+    
+    D = Subgraph2Dataset(g);
+    
+    InitializeWeights(m);
+    InitializeLabelWeights(m);    
+    InitializeBias4HiddenUnits(m);
+    InitializeBias4VisibleUnitsWithRandomValues(m);
+    InitializeBias4LabelUnits(m);
+    
+    switch (op){
+        case 1:
+            reconstruction_error = BernoulliRBMTrainingbyContrastiveDivergence(D, m, n_epochs, n_gibbs_sampling, batch_size);
+        break;
+        case 2:
+            reconstruction_error = BernoulliRBMTrainingbyPersistentContrastiveDivergence(D, m, n_epochs, n_gibbs_sampling, batch_size);
+        break;
+        case 3:
+            reconstruction_error = BernoulliRBMTrainingbyFastPersistentContrastiveDivergence(D, m, n_epochs, n_gibbs_sampling, batch_size);
+        break;
+    }
+    
+    DestroyRBM(&m);
+    DestroyDataset(&D);
+    
+    fprintf(stderr,"\nReconstruction error: %lf ", reconstruction_error);
+    return reconstruction_error;
+}
+
+/* It executes a Bernoulli RBM with Dropout and returns the reconstruction error of the label unit
+Parameters: [g, op, n_epochs, n_gibbs_sampling, batch_size]
+g: dataset in the OPF format
+op: 1 - CD | 2 - PCD | 3 - FPCD
+n_epochs: numer of epochs for training
+n_gibbs_sampling: number of iterations for contrastive divergence
+batch_size: mini-batch size */
+double BernoulliRBMWithDropout(Agent *a, va_list arg){
+    int op, n_hidden_units, n_epochs, n_gibbs_sampling, batch_size;
+    double reconstruction_error, p, q;
+    RBM *m = NULL;
+    Subgraph *g = NULL;
+    Dataset *D = NULL;
+    
+    /* reading input parameters */
+    g = va_arg(arg, Subgraph *);
+    op = va_arg(arg,int);
+    n_epochs = va_arg(arg,int);
+    batch_size = va_arg(arg,int);
+    n_gibbs_sampling = va_arg(arg,int);
+    
+    n_hidden_units = a->x[0];
+    m = CreateRBM(g->nfeats, n_hidden_units, g->nlabels);
+    m->eta = a->x[1];
+    m->lambda = a->x[2];
+    m->alpha = a->x[3];
+    p = a->x[4];
+    q = a->x[5];
+    
+    D = Subgraph2Dataset(g);
+    
+    InitializeWeights(m);
+    InitializeLabelWeights(m);    
+    InitializeBias4HiddenUnits(m);
+    InitializeBias4VisibleUnitsWithRandomValues(m);
+    InitializeBias4LabelUnits(m);
+    
+    switch (op){
+        case 1:
+            reconstruction_error = BernoulliRBMTrainingbyContrastiveDivergencewithDropout(D, m, n_epochs, n_gibbs_sampling, batch_size, p, q);
+        break;
+        case 2:
+            reconstruction_error = BernoulliRBMTrainingbyPersistentContrastiveDivergencewithDropout(D, m, n_epochs, n_gibbs_sampling, batch_size, p, q);
+        break;
+        case 3:
+            reconstruction_error = BernoulliRBMTrainingbyFastPersistentContrastiveDivergencewithDropout(D, m, n_epochs, n_gibbs_sampling, batch_size, p, q);
+        break;
+    }
+    
+    DestroyRBM(&m);
+    DestroyDataset(&D);
+    
+    fprintf(stderr,"\nReconstruction error: %lf ", reconstruction_error);
+    return reconstruction_error;
+}
+
+/* It executes a Bernoulli DRBM and returns the classification error of the label unit
 Parameters: [g, n_epochs, n_gibbs_sampling, batch_size]
 g: dataset in the OPF format
 n_epochs: numer of epochs for training
@@ -44,7 +154,7 @@ double BernoulliDRBM(Agent *a, va_list arg){
     return classification_error;
 }
 
-/* It executes a Bernoulli DRBM with Dropout and returns the reconstruction error of the label unit
+/* It executes a Bernoulli DRBM with Dropout and returns the classification error of the label unit
 Parameters: [g, n_epochs, n_gibbs_sampling, batch_size]
 g: dataset in the OPF format
 n_epochs: numer of epochs for training
