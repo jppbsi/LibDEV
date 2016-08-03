@@ -198,7 +198,7 @@ double BernoulliDRBMWithDropout(Agent *a, va_list arg){
     return classification_error;
 }
 
-/* It executes a Gaussian-Bernoulli DRBM and returns the reconstruction error of the label unit
+/* It executes a Gaussian-Bernoulli DRBM and returns the classification error of the label unit
 Parameters: [g, n_epochs, n_gibbs_sampling, batch_size, sigma]
 g: dataset in the OPF format
 n_epochs: numer of epochs for training
@@ -242,7 +242,7 @@ double Gaussian_BernoulliDRBM(Agent *a, va_list arg){
     return classification_error;
 }
 
-/* It executes a Gaussian-Bernoulli DRBM with Dropout and returns the reconstruction error of the label unit
+/* It executes a Gaussian-Bernoulli DRBM with Dropout and returns the classification error of the label unit
 Parameters: [g, n_epochs, n_gibbs_sampling, batch_size, sigma]
 g: dataset in the OPF format
 n_epochs: numer of epochs for training
