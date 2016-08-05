@@ -11,7 +11,7 @@ n_gibbs_sampling: number of iterations for contrastive divergence
 batch_size: mini-batch size */
 double BernoulliRBM(Agent *a, va_list arg){
     int op, n_hidden_units, n_epochs, n_gibbs_sampling, batch_size;
-    double reconstruction_error;
+    double *eta_bound, reconstruction_error;
     RBM *m = NULL;
     Subgraph *g = NULL;
     Dataset *D = NULL;
@@ -22,20 +22,21 @@ double BernoulliRBM(Agent *a, va_list arg){
     n_epochs = va_arg(arg,int);
     batch_size = va_arg(arg,int);
     n_gibbs_sampling = va_arg(arg,int);
+    eta_bound = va_arg(arg, double *);
     
     n_hidden_units = a->x[0];
-    m = CreateRBM(g->nfeats, n_hidden_units, g->nlabels);
+    m = CreateRBM(g->nfeats, n_hidden_units, 1);
     m->eta = a->x[1];
     m->lambda = a->x[2];
     m->alpha = a->x[3];
+    m->eta_min = eta_bound[0];
+    m->eta_max = eta_bound[1];
     
     D = Subgraph2Dataset(g);
     
-    InitializeWeights(m);
-    InitializeLabelWeights(m);    
+    InitializeWeights(m);    
     InitializeBias4HiddenUnits(m);
     InitializeBias4VisibleUnitsWithRandomValues(m);
-    InitializeBias4LabelUnits(m);
     
     switch (op){
         case 1:
@@ -65,7 +66,7 @@ n_gibbs_sampling: number of iterations for contrastive divergence
 batch_size: mini-batch size */
 double BernoulliRBMWithDropout(Agent *a, va_list arg){
     int op, n_hidden_units, n_epochs, n_gibbs_sampling, batch_size;
-    double reconstruction_error, p, q;
+    double *eta_bound, reconstruction_error, p, q;
     RBM *m = NULL;
     Subgraph *g = NULL;
     Dataset *D = NULL;
@@ -76,26 +77,27 @@ double BernoulliRBMWithDropout(Agent *a, va_list arg){
     n_epochs = va_arg(arg,int);
     batch_size = va_arg(arg,int);
     n_gibbs_sampling = va_arg(arg,int);
-    
+    eta_bound = va_arg(arg, double *);
+        
     n_hidden_units = a->x[0];
-    m = CreateRBM(g->nfeats, n_hidden_units, g->nlabels);
+    m = CreateRBM(g->nfeats, n_hidden_units, 1);
     m->eta = a->x[1];
     m->lambda = a->x[2];
     m->alpha = a->x[3];
+    m->eta_min = eta_bound[0];
+    m->eta_max = eta_bound[1];
     p = a->x[4];
     q = a->x[5];
     
     D = Subgraph2Dataset(g);
     
-    InitializeWeights(m);
-    InitializeLabelWeights(m);    
+    InitializeWeights(m);    
     InitializeBias4HiddenUnits(m);
     InitializeBias4VisibleUnitsWithRandomValues(m);
-    InitializeBias4LabelUnits(m);
     
     switch (op){
         case 1:
-            reconstruction_error = BernoulliRBMTrainingbyContrastiveDivergencewithDropout(D, m, n_epochs, n_gibbs_sampling, batch_size, p, q);
+            reconstruction_error = BernoulliRBMTrainingbyContrastiveDivergencewithDropout(D, m, n_epochs, 1, batch_size, p, q);
         break;
         case 2:
             reconstruction_error = BernoulliRBMTrainingbyPersistentContrastiveDivergencewithDropout(D, m, n_epochs, n_gibbs_sampling, batch_size, p, q);
@@ -120,7 +122,7 @@ n_gibbs_sampling: number of iterations for contrastive divergence
 batch_size: mini-batch size */
 double BernoulliDRBM(Agent *a, va_list arg){
     int n_hidden_units, n_epochs, n_gibbs_sampling, batch_size;
-    double classification_error;
+    double classification_error, *eta_bound;
     RBM *m = NULL;
     Subgraph *g = NULL;
     Dataset *D = NULL;
@@ -130,12 +132,15 @@ double BernoulliDRBM(Agent *a, va_list arg){
     n_epochs = va_arg(arg,int);
     batch_size = va_arg(arg,int);
     n_gibbs_sampling = va_arg(arg,int);
+    eta_bound = va_arg(arg, double *);
     
     n_hidden_units = a->x[0];
     m = CreateRBM(g->nfeats, n_hidden_units, g->nlabels);
     m->eta = a->x[1];
     m->lambda = a->x[2];
     m->alpha = a->x[3];
+    m->eta_min = eta_bound[0];
+    m->eta_max = eta_bound[1];
     
     D = Subgraph2Dataset(g);
     
@@ -162,7 +167,7 @@ n_gibbs_sampling: number of iterations for contrastive divergence
 batch_size: mini-batch size */
 double BernoulliDRBMWithDropout(Agent *a, va_list arg){
     int n_hidden_units, n_epochs, n_gibbs_sampling, batch_size;
-    double classification_error, p, q;
+    double classification_error, *eta_bound, p, q;
     RBM *m = NULL;
     Subgraph *g = NULL;
     Dataset *D = NULL;
@@ -172,12 +177,15 @@ double BernoulliDRBMWithDropout(Agent *a, va_list arg){
     n_epochs = va_arg(arg,int);
     batch_size = va_arg(arg,int);
     n_gibbs_sampling = va_arg(arg,int);
+    eta_bound = va_arg(arg, double *);
     
     n_hidden_units = a->x[0];
     m = CreateRBM(g->nfeats, n_hidden_units, g->nlabels);
     m->eta = a->x[1];
     m->lambda = a->x[2];
     m->alpha = a->x[3];
+    m->eta_min = eta_bound[0];
+    m->eta_max = eta_bound[1];
     p = a->x[4];
     q = a->x[5];
     
@@ -207,7 +215,7 @@ batch_size: mini-batch size
 sigma: input array with the variances associated to each visible unit */
 double Gaussian_BernoulliDRBM(Agent *a, va_list arg){
     int n_hidden_units, n_epochs, n_gibbs_sampling, batch_size;
-    double classification_error, *sigma;
+    double classification_error, *eta_bound, *sigma;
     RBM *m = NULL;
     Subgraph *g = NULL;
     Dataset *D = NULL;
@@ -218,12 +226,15 @@ double Gaussian_BernoulliDRBM(Agent *a, va_list arg){
     batch_size = va_arg(arg,int);
     n_gibbs_sampling = va_arg(arg,int);
     sigma = va_arg(arg, double *);
+    eta_bound = va_arg(arg, double *);
     
     n_hidden_units = a->x[0];
     m = CreateNewDRBM(g->nfeats, n_hidden_units, g->nlabels, sigma);
     m->eta = a->x[1];
     m->lambda = a->x[2];
     m->alpha = a->x[3];
+    m->eta_min = eta_bound[0];
+    m->eta_max = eta_bound[1];
     
     D = Subgraph2Dataset(g);
     
@@ -251,7 +262,7 @@ batch_size: mini-batch size
 sigma: input array with the variances associated to each visible unit */
 double Gaussian_BernoulliDRBMWithDropout(Agent *a, va_list arg){
     int n_hidden_units, n_epochs, n_gibbs_sampling, batch_size;
-    double classification_error, p, q, *sigma;
+    double classification_error, *eta_bound, p, q, *sigma;
     RBM *m = NULL;
     Subgraph *g = NULL;
     Dataset *D = NULL;
@@ -262,12 +273,15 @@ double Gaussian_BernoulliDRBMWithDropout(Agent *a, va_list arg){
     batch_size = va_arg(arg,int);
     n_gibbs_sampling = va_arg(arg,int);
     sigma = va_arg(arg, double *);
+    eta_bound = va_arg(arg, double *);
     
     n_hidden_units = a->x[0];
     m = CreateNewDRBM(g->nfeats, n_hidden_units, g->nlabels, sigma);
     m->eta = a->x[1];
     m->lambda = a->x[2];
     m->alpha = a->x[3];
+    m->eta_min = eta_bound[0];
+    m->eta_max = eta_bound[1];
     p = a->x[4];
     q = a->x[5];
     
@@ -297,7 +311,7 @@ batch_size: mini-batch size
 sigma: input array with the variances associated to each visible unit */
 double Gaussian_BernoulliRBM(Agent *a, va_list arg){
     int n_hidden_units, n_epochs, n_gibbs_sampling, batch_size;
-    double reconstruction_error, *sigma;
+    double reconstruction_error, *eta_bound, *sigma;
     RBM *m = NULL;
     Subgraph *g = NULL;
     Dataset *D = NULL;
@@ -308,12 +322,15 @@ double Gaussian_BernoulliRBM(Agent *a, va_list arg){
     batch_size = va_arg(arg,int);
     n_gibbs_sampling = va_arg(arg,int);
     sigma = va_arg(arg, double *);
+    eta_bound = va_arg(arg, double *);
     
     n_hidden_units = a->x[0];
     m = CreateNewDRBM(g->nfeats, n_hidden_units, g->nlabels, sigma);
     m->eta = a->x[1];
     m->lambda = a->x[2];
     m->alpha = a->x[3];
+    m->eta_min = eta_bound[0];
+    m->eta_max = eta_bound[1];
         
     D = Subgraph2Dataset(g);
     
@@ -341,7 +358,7 @@ batch_size: mini-batch size
 sigma: input array with the variances associated to each visible unit */
 double Gaussian_BernoulliRBMWithDropout(Agent *a, va_list arg){
     int n_hidden_units, n_epochs, n_gibbs_sampling, batch_size;
-    double reconstruction_error, p, q, *sigma;
+    double reconstruction_error, *eta_bound, p, q, *sigma;
     RBM *m = NULL;
     Subgraph *g = NULL;
     Dataset *D = NULL;
@@ -352,12 +369,15 @@ double Gaussian_BernoulliRBMWithDropout(Agent *a, va_list arg){
     batch_size = va_arg(arg,int);
     n_gibbs_sampling = va_arg(arg,int);
     sigma = va_arg(arg, double *);
+    eta_bound = va_arg(arg, double *);
     
     n_hidden_units = a->x[0];
     m = CreateNewDRBM(g->nfeats, n_hidden_units, g->nlabels, sigma);
     m->eta = a->x[1];
     m->lambda = a->x[2];
     m->alpha = a->x[3];
+    m->eta_min = eta_bound[0];
+    m->eta_max = eta_bound[1];
     p = a->x[4];
     q = a->x[5];
         

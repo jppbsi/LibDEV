@@ -12,7 +12,7 @@ int main(int argc, char **argv){
     int i, j, z;
     int iteration = atoi(argv[4]), n_epochs = atoi(argv[7]), batch_size = atoi(argv[8]), n_gibbs_sampling = atoi(argv[9]), op = atoi(argv[10]);
     int n_hidden_units;
-    double errorTrain, errorTest, p, q;
+    double *eta_bound, errorTrain, errorTest, p, q;
     FILE *f = NULL;
     Subgraph *Train = NULL, *Test = NULL;
     Dataset *DatasetTrain = NULL, *DatasetTest = NULL;
@@ -25,27 +25,31 @@ int main(int argc, char **argv){
     
     s = ReadSearchSpaceFromFile(argv[5], _PSO_);
     
+    eta_bound = (double *)calloc(2, sizeof(double));
+    eta_bound[0] = s->LB[1];
+    eta_bound[1] = s->UB[1];
+    
     fprintf(stderr,"\nInitializing search space ... ");
     InitializeSearchSpace(s, _PSO_);
     fprintf(stderr,"\nOk\n");
-    
+        
     fprintf(stderr,"\nRunning PSO ... ");
-    runPSO(s, BernoulliRBMWithDropout, Train, op, n_epochs, batch_size, n_gibbs_sampling);
+    runPSO(s, BernoulliRBMWithDropout, Train, op, n_epochs, batch_size, n_gibbs_sampling, eta_bound);
     
     fprintf(stderr,"\n\nRunning Dropout RBM with best parameters on training set ... ");
     n_hidden_units = (int)s->g[0];
-    m = CreateRBM(Train->nfeats, n_hidden_units, Train->nlabels);
+    m = CreateRBM(Train->nfeats, n_hidden_units, 1);
     m->eta = s->g[1];
     m->lambda = s->g[2];
     m->alpha = s->g[3];
+    m->eta_min = eta_bound[0];
+    m->eta_max = eta_bound[1];
     p = s->g[4];
     q = s->g[5];
 
-    InitializeWeights(m);
-    InitializeLabelWeights(m);    
+    InitializeWeights(m);    
     InitializeBias4HiddenUnits(m);
     InitializeBias4VisibleUnitsWithRandomValues(m);
-    InitializeBias4LabelUnits(m);
 
     switch (op){
         case 1:
@@ -78,6 +82,7 @@ int main(int argc, char **argv){
     fclose(f);
     fprintf(stderr, "Ok!\n");
         
+    free(eta_bound);
     DestroySearchSpace(&s, _PSO_);
     DestroyDataset(&DatasetTrain);
     DestroyDataset(&DatasetTest);
