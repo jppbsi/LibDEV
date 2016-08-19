@@ -114,6 +114,62 @@ double BernoulliRBMWithDropout(Agent *a, va_list arg){
     return reconstruction_error;
 }
 
+/* It executes a Bernoulli RBM with Dropconnect and returns the reconstruction error of the label unit
+Parameters: [g, op, n_epochs, n_gibbs_sampling, batch_size]
+g: dataset in the OPF format
+op: 1 - CD | 2 - PCD | 3 - FPCD
+n_epochs: numer of epochs for training
+n_gibbs_sampling: number of iterations for contrastive divergence
+batch_size: mini-batch size */
+double BernoulliRBMWithDropconnect(Agent *a, va_list arg){
+    int op, n_hidden_units, n_epochs, n_gibbs_sampling, batch_size;
+    double *eta_bound, reconstruction_error, p;
+    RBM *m = NULL;
+    Subgraph *g = NULL;
+    Dataset *D = NULL;
+    
+    /* reading input parameters */
+    g = va_arg(arg, Subgraph *);
+    op = va_arg(arg,int);
+    n_epochs = va_arg(arg,int);
+    batch_size = va_arg(arg,int);
+    n_gibbs_sampling = va_arg(arg,int);
+    eta_bound = va_arg(arg, double *);
+        
+    n_hidden_units = a->x[0];
+    m = CreateRBM(g->nfeats, n_hidden_units, 1);
+    m->eta = a->x[1];
+    m->lambda = a->x[2];
+    m->alpha = a->x[3];
+    m->eta_min = eta_bound[0];
+    m->eta_max = eta_bound[1];
+    p = a->x[4];
+    
+    D = Subgraph2Dataset(g);
+    
+    InitializeWeights(m);    
+    InitializeBias4HiddenUnits(m);
+    InitializeBias4VisibleUnitsWithRandomValues(m);
+    
+    switch (op){
+        case 1:
+            reconstruction_error = BernoulliRBMTrainingbyContrastiveDivergencewithDropconnect(D, m, n_epochs, 1, batch_size, p);
+        break;
+        case 2:
+            reconstruction_error = BernoulliRBMTrainingbyPersistentContrastiveDivergencewithDropconnect(D, m, n_epochs, n_gibbs_sampling, batch_size, p);
+        break;
+        case 3:
+            reconstruction_error = BernoulliRBMTrainingbyFastPersistentContrastiveDivergencewithDropconnect(D, m, n_epochs, n_gibbs_sampling, batch_size, p);
+        break;
+    }
+    
+    DestroyRBM(&m);
+    DestroyDataset(&D);
+    
+    fprintf(stderr,"\nReconstruction error: %lf ", reconstruction_error);
+    return reconstruction_error;
+}
+
 /* It executes a Bernoulli DRBM and returns the classification error of the label unit
 Parameters: [g, n_epochs, n_gibbs_sampling, batch_size]
 g: dataset in the OPF format
