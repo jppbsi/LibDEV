@@ -3,22 +3,22 @@
 2 5 # <minimum_depth_tree> <maximum_depth_tree>
 SUM MUL DIV SUB # function nodes
 PARAM CONST # terminal nodes
-1 1 # <real-optimization problem> <the variables have different ranges>
-5 100 #<LB> <UB> number of hidden units
-0.01 0.1 #<LB> <UB> learning rate
-0.0002 0.002 #<LB> <UB> weight decay
-0.05 0.5 #<LB> <UB> momentum
-0.1 1 #<LB> <UB> hidden units dropout rate
-0.1 1 #<LB> <UB> visible units dropout rate
-5 100 #<LB> <UB> number of hidden units
-0.01 0.1 #<LB> <UB> learning rate
-0.0002 0.002 #<LB> <UB> weight decay
-0.05 0.5 #<LB> <UB> momentum
-0.1 1 #<LB> <UB> hidden units dropout rate
-0.1 1 #<LB> <UB> visible units dropout rate
-5 100 #<LB> <UB> number of hidden units
-0.01 0.1 #<LB> <UB> learning rate
-0.0002 0.002 #<LB> <UB> weight decay
-0.05 0.5 #<LB> <UB> momentum
-0.1 1 #<LB> <UB> hidden units dropout rate
-0.1 1 #<LB> <UB> visible units dropout rate
+1 1 # <integer(binary)-optimization problem> <the variables have different ranges>
+5 100 # <LB> <UB> number of hidden units
+0.01 0.1 # <LB> <UB> learning rate
+0.0002 0.002 # <LB> <UB> weight decay
+0.05 0.5 # <LB> <UB> momentum
+0.1 1 # <LB> <UB> hidden units dropout rate
+0.1 1 # <LB> <UB> visible units dropout rate
+5 100 # <LB> <UB> number of hidden units
+0.01 0.1 # <LB> <UB> learning rate
+0.0002 0.002 # <LB> <UB> weight decay
+0.05 0.5 # <LB> <UB> momentum
+0.1 1 # <LB> <UB> hidden units dropout rate
+0.1 1 # <LB> <UB> visible units dropout rate
+5 100 # <LB> <UB> number of hidden units
+0.01 0.1 # <LB> <UB> learning rate
+0.0002 0.002 # <LB> <UB> weight decay
+0.05 0.5 # <LB> <UB> momentum
+0.1 1 # <LB> <UB> hidden units dropout rate
+0.1 1 # <LB> <UB> visible units dropout rate
