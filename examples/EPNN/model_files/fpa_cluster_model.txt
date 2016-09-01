@@ -1,0 +1,3 @@
+10 1 10 # <n_particles> <dimension> <max_iterations>
+1.5 0.8 # <beta> <p>
+1 10 # <LB> <UB> kmax

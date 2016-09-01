@@ -24,6 +24,7 @@ extern "C" {
 #include "_opf_.h"
 #include "_dbn_.h"
 #include "_dbm_.h"
+#include "_epnn_.h"
 #include "_featureselection_.h"
 #include "_rbm_.h"
 #include "_regression_.h"

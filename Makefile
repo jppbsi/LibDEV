@@ -8,7 +8,7 @@ CC=gcc
 FLAGS=  -g -O0
 CFLAGS=''
 
-all: libdev OPFknn OPFcluster OPFpruning DBN DBN_GP DropoutDBN DropconnectDBN DBM FeatureSelection RBM DropoutRBM DropconnectRBM DRBM DropoutDRBM GaussianDRBM DropoutGaussianDRBM GaussianRBM DropoutGaussianRBM LinearRegression LogisticRegression
+all: libdev OPFknn OPFcluster OPFpruning DBN DBN_GP DropoutDBN DropconnectDBN DBM FeatureSelection RBM DropoutRBM DropconnectRBM DRBM DropoutDRBM GaussianDRBM DropoutGaussianDRBM EPNN GaussianRBM DropoutGaussianRBM LinearRegression LogisticRegression
 
 libdev: $(LIB)/libdev.a
 	echo "libdev.a built..."
@@ -18,6 +18,7 @@ $(OBJ)/dev.o \
 $(OBJ)/_opf_.o \
 $(OBJ)/_dbn_.o \
 $(OBJ)/_dbm_.o \
+$(OBJ)/_epnn_.o \
 $(OBJ)/_featureselection_.o \
 $(OBJ)/_rbm_.o \
 $(OBJ)/_regression_.o \
@@ -27,6 +28,7 @@ $(OBJ)/dev.o \
 $(OBJ)/_opf_.o \
 $(OBJ)/_dbn_.o \
 $(OBJ)/_dbm_.o \
+$(OBJ)/_epnn_.o \
 $(OBJ)/_featureselection_.o \
 $(OBJ)/_rbm_.o \
 $(OBJ)/_regression_.o \
@@ -46,6 +48,10 @@ $(OBJ)/_dbn_.o: $(SRC)/_dbn_.c
 $(OBJ)/_dbm_.o: $(SRC)/_dbm_.c
 	$(CC) $(FLAGS) -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
     -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -c $(SRC)/_dbm_.c -o $(OBJ)/_dbm_.o
+
+$(OBJ)/_epnn_.o: $(SRC)/_epnn_.c
+	$(CC) $(FLAGS) -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -c $(SRC)/_epnn_.c -o $(OBJ)/_epnn_.o
 
 $(OBJ)/_featureselection_.o: $(SRC)/_featureselection_.c
 	$(CC) $(FLAGS) -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
@@ -89,6 +95,10 @@ DropconnectDBN: examples/DBN/DropconnectDBN.c
 
 DBM: examples/DBM/DBM.c
 	$(CC) $(FLAGS) examples/DBM/DBM.c -o examples/bin/DBM -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt-plus -lgsl -lgslcblas -lm;
+
+EPNN: examples/EPNN/EPNN.c
+	$(CC) $(FLAGS) examples/EPNN/EPNN.c -o examples/bin/EPNN -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
     -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt-plus -lgsl -lgslcblas -lm;
 
 FeatureSelection: examples/FeatureSelection/FeatureSelection.c

@@ -4,4 +4,4 @@
 SUM MUL DIV SUB # function nodes
 PARAM CONST # terminal nodes
 0 1 # <integer(binary)-optimization problem> <the variables have different ranges>
-0 0.1 # <LB> <UB> learning rate
+1 10 # <LB> <UB> kmax

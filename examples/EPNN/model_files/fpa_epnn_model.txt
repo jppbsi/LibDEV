@@ -1,0 +1,4 @@
+10 2 10 # <n_particles> <dimension> <max_iterations>
+1.5 0.8 # <beta> <p>
+0 1 # <LB> <UB> sigma
+1 10 # <LB> <UB> radius
