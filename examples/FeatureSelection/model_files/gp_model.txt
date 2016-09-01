@@ -3,4 +3,4 @@
 2 5 # <minimum_depth_tree> <maximum_depth_tree>
 AND OR XOR NOT # function nodes
 PARAM CONST # terminal nodes
-0 0 # <real-optimization problem> <the variables have different ranges>
+1 0 # <integer(binary)-optimization problem> <the variables have different ranges>
