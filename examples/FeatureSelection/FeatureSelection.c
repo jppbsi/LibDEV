@@ -9,7 +9,7 @@ int main(int argc, char **argv){
     
     SearchSpace *s = NULL;
     int i;
-    double time, classification_error;
+    double time_opt, time_classify, classification_error;
     timer tic, toc;
     FILE *f = NULL;
     TransferFunc optTransfer = NULL;
@@ -18,7 +18,7 @@ int main(int argc, char **argv){
     Train = ReadSubgraph(argv[1]);
     Evaluate = ReadSubgraph(argv[2]);
     Test = ReadSubgraph(argv[3]);
-    s = ReadSearchSpaceFromFile(argv[4], _PSO_);
+    s = ReadSearchSpaceFromFile(argv[4], _GP_);
     optTransfer = S2TransferFunction;
     
     for (i = 0; i < Train->nfeats; i++){
@@ -27,14 +27,17 @@ int main(int argc, char **argv){
     }
     
     fprintf(stderr,"\nInitializing search space ... ");
-    InitializeSearchSpace(s, _PSO_);
+    InitializeSearchSpace(s, _GP_);
     fprintf(stderr,"\nOk\n");
     
-    fflush(stderr); fprintf(stderr,"\nRunning PSO ... ");
+    fflush(stderr); fprintf(stderr,"\nRunning GP ... ");
     gettimeofday(&tic,NULL);
-    runPSO(s, FeatureSelection, Train, Evaluate, optTransfer);
+    runGP(s, FeatureSelection, Train, Evaluate, optTransfer);
     gettimeofday(&toc,NULL);
     fflush(stderr); fprintf(stderr,"\nOK\n");
+    
+    time_opt = ((toc.tv_sec-tic.tv_sec)*1000.0 + (toc.tv_usec-tic.tv_usec)*0.001)/1000.0;
+    fprintf(stdout, "\nOptimization time: %f seconds\n", time_opt); fflush(stderr);
     
     Merge = opf_MergeSubgraph(Train, Evaluate);
         
@@ -42,14 +45,19 @@ int main(int argc, char **argv){
     newTrain = CreateSubgraphFromSelectedFeatures(Merge, s->g);
     newTest = CreateSubgraphFromSelectedFeatures(Test, s->g);
     fprintf(stderr, "\nTraining set\n");
-    WriteSubgraph(newTrain, "training.pso.dat");
+    WriteSubgraph(newTrain, "training.gp.dat");
     fprintf(stderr, "\n\nTesting set\n");
-    WriteSubgraph(newTest, "testing.pso.dat");
+    WriteSubgraph(newTest, "testing.gp.dat");
     fflush(stderr); fprintf(stderr,"\nOK\n");
     
     opf_OPFTraining(newTrain);
+    gettimeofday(&tic,NULL);
     opf_OPFClassifying(newTrain, newTest);
+    gettimeofday(&toc,NULL);
     classification_error = opf_Accuracy(newTest);
+    
+    time_classify = ((toc.tv_sec-tic.tv_sec)*1000.0 + (toc.tv_usec-tic.tv_usec)*0.001)/1000.0;
+    fprintf(stdout, "\nClassification time: %f seconds\n", time_classify); fflush(stderr);
     
     f = fopen("best_feats.txt", "a");
     fprintf(f, "%d %d", newTrain->nfeats, (int)s->g[0]);
@@ -72,15 +80,12 @@ int main(int argc, char **argv){
     DestroySubgraph(&newTrain);
     DestroySubgraph(&newTest);
     fflush(stderr); fprintf(stderr,"\nOK\n");
-    
-    time = ((toc.tv_sec-tic.tv_sec)*1000.0 + (toc.tv_usec-tic.tv_usec)*0.001)/1000.0;
-    fprintf(stdout, "\nRunning time: %f seconds\n", time); fflush(stderr);
-    
+        
     f = fopen("optimization.time","a");
-    fprintf(f,"%f\n",time);
+    fprintf(f,"%f %f\n",time_opt, time_classify);
     fclose(f);
     
-    DestroySearchSpace(&s, _PSO_);
+    DestroySearchSpace(&s, _GP_);
     
     return 0;
 }
