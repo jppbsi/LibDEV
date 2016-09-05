@@ -12,7 +12,7 @@ int main(int argc, char **argv){
     int i, j, z;
     int iteration = atoi(argv[4]), n_epochs = atoi(argv[7]), batch_size = atoi(argv[8]), n_gibbs_sampling = atoi(argv[9]), op = atoi(argv[10]);
     int n_hidden_units;
-    double *eta_bound, errorTrain, errorTest, p, q;
+    double *eta_bound, errorTrain, errorTest, p;
     FILE *f = NULL;
     Subgraph *Train = NULL, *Test = NULL;
     Dataset *DatasetTrain = NULL, *DatasetTest = NULL;
@@ -45,7 +45,6 @@ int main(int argc, char **argv){
     m->eta_min = eta_bound[0];
     m->eta_max = eta_bound[1];
     p = s->g[4];
-    q = s->g[5];
 
     InitializeWeights(m);    
     InitializeBias4HiddenUnits(m);
@@ -53,18 +52,18 @@ int main(int argc, char **argv){
 
     switch (op){
         case 1:
-            errorTrain = BernoulliRBMTrainingbyContrastiveDivergencewithDropout(DatasetTrain, m, n_epochs, 1, batch_size, p, q);
+            errorTrain = BernoulliRBMTrainingbyContrastiveDivergencewithDropout(DatasetTrain, m, n_epochs, 1, batch_size, p);
         break;
         case 2:
-            errorTrain = BernoulliRBMTrainingbyPersistentContrastiveDivergencewithDropout(DatasetTrain, m, n_epochs, n_gibbs_sampling, batch_size, p, q);
+            errorTrain = BernoulliRBMTrainingbyPersistentContrastiveDivergencewithDropout(DatasetTrain, m, n_epochs, n_gibbs_sampling, batch_size, p);
         break;
         case 3:
-            errorTrain = BernoulliRBMTrainingbyFastPersistentContrastiveDivergencewithDropout(DatasetTrain, m, n_epochs, n_gibbs_sampling, batch_size, p, q);
+            errorTrain = BernoulliRBMTrainingbyFastPersistentContrastiveDivergencewithDropout(DatasetTrain, m, n_epochs, n_gibbs_sampling, batch_size, p);
         break;
     }
     
     fprintf(stderr,"\n\nRunning Dropout RBM for reconstruction on testing set ... ");
-    errorTest = BernoulliRBMReconstructionwithDropout(DatasetTest, m, p, q);
+    errorTest = BernoulliRBMReconstruction(DatasetTest, m);
     fprintf(stderr,"\nOK\n");
     
     fprintf(stderr,"\nTraining error: %lf\nTesting error: %lf\n", errorTrain, errorTest);

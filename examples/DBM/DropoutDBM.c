@@ -2,9 +2,9 @@
 
 int main(int argc, char **argv){
     if(argc != 12){
-        fprintf(stderr,"\nUsage: DropoutDBN <training set> <testing set> <output results file name> <cross-validation iteration number> \
+        fprintf(stderr,"\nUsage: DropoutDBM <training set> <testing set> <output results file name> <cross-validation iteration number> \
                 <search space configuration file> <output best parameters file name> <n_epochs> <batch_size> \
-                <number of iterations for Constrastive Divergence> <1 - CD | 2 - PCD | 3 - FPCD> <number of DBN layers>");
+                <number of iterations for Constrastive Divergence> <1 - CD | 2 - PCD | 3 - FPCD> <number of DBM layers>");
         exit(-1);
     }
     
@@ -16,7 +16,7 @@ int main(int argc, char **argv){
     FILE *f = NULL;
     Subgraph *Train = NULL, *Test = NULL;
     Dataset *DatasetTrain = NULL, *DatasetTest = NULL;
-    DBN *d = NULL;
+    DBM *d = NULL;
     
     Train = ReadSubgraph(argv[1]);
     Test = ReadSubgraph(argv[2]);
@@ -40,16 +40,16 @@ int main(int argc, char **argv){
     fprintf(stderr,"\nOk\n");
     
     fprintf(stderr,"\nRunning PSO ... ");
-    runPSO(s, Bernoulli_BernoulliDBN4ReconstructionWithDropout, Train, op, n_layers, n_epochs, batch_size, n_gibbs_sampling, eta_bound);
+    runPSO(s, Bernoulli_BernoulliDBM4ReconstructionWithDropout, Train, op, n_layers, n_epochs, batch_size, n_gibbs_sampling, eta_bound);
     
-    fprintf(stderr,"\n\nRunning Dropout DBN with best parameters on training set ... ");
+    fprintf(stderr,"\n\nRunning Dropout DBM with best parameters on training set ... ");
     n_hidden_units = (int *)calloc(n_layers, sizeof(int));
     j = 0;
     for(i = 0; i < n_layers; i++){
         n_hidden_units[i] = s->g[j]; j+=5;
     } 
-    d = CreateNewDBN(Train->nfeats, n_hidden_units, Train->nlabels, n_layers);
-    InitializeDBN(d);
+    d = CreateNewDBM(Train->nfeats, n_hidden_units, Train->nlabels, n_layers);
+    InitializeDBM(d);
     j = 1;
     p = (double *)calloc(n_layers, sizeof(double));
     for(i = 0; i < d->n_layers; i++){
@@ -60,20 +60,11 @@ int main(int argc, char **argv){
         d->m[i]->eta_min = eta_bound[0][i];
         d->m[i]->eta_max = eta_bound[1][i];
     }        
-    switch (op){
-        case 1:
-            errorTrain = BernoulliDBNTrainingbyContrastiveDivergenceWithDropout(DatasetTrain, d, n_epochs, n_gibbs_sampling, batch_size, p);
-        break;
-        case 2:
-            errorTrain = BernoulliDBNTrainingbyPersistentContrastiveDivergenceWithDropout(DatasetTrain, d, n_epochs, n_gibbs_sampling, batch_size, p);
-        break;
-        case 3:
-            errorTrain = BernoulliDBNTrainingbyFastPersistentContrastiveDivergenceWithDropout(DatasetTrain, d, n_epochs, n_gibbs_sampling, batch_size, p);
-        break;
-    }
+
+    errorTrain = GreedyPreTrainingDBMwithDropout(DatasetTrain, d, n_epochs, n_gibbs_sampling, batch_size, op, p);
     
-    fprintf(stderr,"\n\nRunning Dropout DBN for reconstruction on testing set ... ");
-    errorTest = BernoulliDBNReconstruction(DatasetTest, d);
+    fprintf(stderr,"\n\nRunning DBM for reconstruction on testing set ... ");
+    errorTest = BernoulliDBMReconstruction(DatasetTest, d);
     fprintf(stderr,"\nOK\n");
     
     fprintf(stderr,"\nTraining error: %lf\nTesting error: %lf\n", errorTrain, errorTest);
@@ -101,7 +92,7 @@ int main(int argc, char **argv){
     DestroyDataset(&DatasetTest);
     DestroySubgraph(&Train);
     DestroySubgraph(&Test);
-    DestroyDBN(&d);
+    DestroyDBM(&d);
     
     return 0;
 }

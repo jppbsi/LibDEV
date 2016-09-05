@@ -79,7 +79,7 @@ n_gibbs_sampling: number of iterations for contrastive divergence
 eta_bound: learning rate boundaries matrix */
 double Bernoulli_BernoulliDBN4ReconstructionWithDropout(Agent *a, va_list arg){
     int i, j, op, L, n_epochs, batch_size, n_gibbs_sampling, *n_hidden_units;
-    double **eta_bound, *p, *q;
+    double **eta_bound, *p;
     double reconstruction_error;
     DBN *d = NULL;
     Subgraph *g = NULL;
@@ -95,11 +95,10 @@ double Bernoulli_BernoulliDBN4ReconstructionWithDropout(Agent *a, va_list arg){
     eta_bound = va_arg(arg, double **);
     n_hidden_units = (int *)calloc(L, sizeof(int));
     p = (double *)calloc(L, sizeof(double));
-    q = (double *)calloc(L, sizeof(double));
     
     j = 0;
     for(i = 0; i < L; i++){
-        n_hidden_units[i] = a->x[j]; j+=6;
+        n_hidden_units[i] = a->x[j]; j+=5;
     }
         
     d = CreateNewDBN(g->nfeats, n_hidden_units, g->nlabels, L);
@@ -109,8 +108,7 @@ double Bernoulli_BernoulliDBN4ReconstructionWithDropout(Agent *a, va_list arg){
         d->m[i]->eta = a->x[j]; j++;
         d->m[i]->lambda = a->x[j]; j++;
         d->m[i]->alpha = a->x[j]; j++;
-        p[i] = a->x[j]; j++;
-        q[i] = a->x[j]; j+=2;
+        p[i] = a->x[j]; j+=2;
         d->m[i]->eta_min = eta_bound[0][i];
         d->m[i]->eta_max = eta_bound[1][i];
     }
@@ -119,13 +117,13 @@ double Bernoulli_BernoulliDBN4ReconstructionWithDropout(Agent *a, va_list arg){
     
     switch (op){
         case 1:
-            reconstruction_error = BernoulliDBNTrainingbyContrastiveDivergenceWithDropout(D, d, n_epochs, n_gibbs_sampling, batch_size, p, q);
+            reconstruction_error = BernoulliDBNTrainingbyContrastiveDivergenceWithDropout(D, d, n_epochs, n_gibbs_sampling, batch_size, p);
         break;
         case 2:
-            reconstruction_error = BernoulliDBNTrainingbyPersistentContrastiveDivergenceWithDropout(D, d, n_epochs, n_gibbs_sampling, batch_size, p, q);
+            reconstruction_error = BernoulliDBNTrainingbyPersistentContrastiveDivergenceWithDropout(D, d, n_epochs, n_gibbs_sampling, batch_size, p);
         break;
         case 3:
-            reconstruction_error = BernoulliDBNTrainingbyFastPersistentContrastiveDivergenceWithDropout(D, d, n_epochs, n_gibbs_sampling, batch_size, p, q);
+            reconstruction_error = BernoulliDBNTrainingbyFastPersistentContrastiveDivergenceWithDropout(D, d, n_epochs, n_gibbs_sampling, batch_size, p);
         break;
     }
     
@@ -133,7 +131,6 @@ double Bernoulli_BernoulliDBN4ReconstructionWithDropout(Agent *a, va_list arg){
     DestroyDataset(&D);
     free(n_hidden_units);
     free(p);
-    free(q);
     
     fprintf(stderr,"\nReconstruction error: %lf ", reconstruction_error);
     return reconstruction_error;

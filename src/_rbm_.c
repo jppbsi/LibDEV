@@ -66,7 +66,7 @@ n_gibbs_sampling: number of iterations for contrastive divergence
 batch_size: mini-batch size */
 double BernoulliRBMWithDropout(Agent *a, va_list arg){
     int op, n_hidden_units, n_epochs, n_gibbs_sampling, batch_size;
-    double *eta_bound, reconstruction_error, p, q;
+    double *eta_bound, reconstruction_error, p;
     RBM *m = NULL;
     Subgraph *g = NULL;
     Dataset *D = NULL;
@@ -87,7 +87,6 @@ double BernoulliRBMWithDropout(Agent *a, va_list arg){
     m->eta_min = eta_bound[0];
     m->eta_max = eta_bound[1];
     p = a->x[4];
-    q = a->x[5];
     
     D = Subgraph2Dataset(g);
     
@@ -97,13 +96,13 @@ double BernoulliRBMWithDropout(Agent *a, va_list arg){
     
     switch (op){
         case 1:
-            reconstruction_error = BernoulliRBMTrainingbyContrastiveDivergencewithDropout(D, m, n_epochs, 1, batch_size, p, q);
+            reconstruction_error = BernoulliRBMTrainingbyContrastiveDivergencewithDropout(D, m, n_epochs, 1, batch_size, p);
         break;
         case 2:
-            reconstruction_error = BernoulliRBMTrainingbyPersistentContrastiveDivergencewithDropout(D, m, n_epochs, n_gibbs_sampling, batch_size, p, q);
+            reconstruction_error = BernoulliRBMTrainingbyPersistentContrastiveDivergencewithDropout(D, m, n_epochs, n_gibbs_sampling, batch_size, p);
         break;
         case 3:
-            reconstruction_error = BernoulliRBMTrainingbyFastPersistentContrastiveDivergencewithDropout(D, m, n_epochs, n_gibbs_sampling, batch_size, p, q);
+            reconstruction_error = BernoulliRBMTrainingbyFastPersistentContrastiveDivergencewithDropout(D, m, n_epochs, n_gibbs_sampling, batch_size, p);
         break;
     }
     
@@ -223,7 +222,7 @@ n_gibbs_sampling: number of iterations for contrastive divergence
 batch_size: mini-batch size */
 double BernoulliDRBMWithDropout(Agent *a, va_list arg){
     int n_hidden_units, n_epochs, n_gibbs_sampling, batch_size;
-    double classification_error, *eta_bound, p, q;
+    double classification_error, *eta_bound, p;
     RBM *m = NULL;
     Subgraph *g = NULL;
     Dataset *D = NULL;
@@ -243,8 +242,7 @@ double BernoulliDRBMWithDropout(Agent *a, va_list arg){
     m->eta_min = eta_bound[0];
     m->eta_max = eta_bound[1];
     p = a->x[4];
-    q = a->x[5];
-    
+
     D = Subgraph2Dataset(g);
     
     InitializeWeights(m);
@@ -253,7 +251,7 @@ double BernoulliDRBMWithDropout(Agent *a, va_list arg){
     InitializeBias4VisibleUnitsWithRandomValues(m);
     InitializeBias4LabelUnits(m);
     
-    classification_error = DiscriminativeBernoulliRBMTrainingbyContrastiveDivergencewithDropout(D, m, n_epochs, n_gibbs_sampling, batch_size, p, q);
+    classification_error = DiscriminativeBernoulliRBMTrainingbyContrastiveDivergencewithDropout(D, m, n_epochs, n_gibbs_sampling, batch_size, p);
     
     DestroyRBM(&m);
     DestroyDataset(&D);
@@ -318,7 +316,7 @@ batch_size: mini-batch size
 sigma: input array with the variances associated to each visible unit */
 double Gaussian_BernoulliDRBMWithDropout(Agent *a, va_list arg){
     int n_hidden_units, n_epochs, n_gibbs_sampling, batch_size;
-    double classification_error, *eta_bound, p, q, *sigma;
+    double classification_error, *eta_bound, p, *sigma;
     RBM *m = NULL;
     Subgraph *g = NULL;
     Dataset *D = NULL;
@@ -339,7 +337,6 @@ double Gaussian_BernoulliDRBMWithDropout(Agent *a, va_list arg){
     m->eta_min = eta_bound[0];
     m->eta_max = eta_bound[1];
     p = a->x[4];
-    q = a->x[5];
     
     D = Subgraph2Dataset(g);
     
@@ -349,7 +346,7 @@ double Gaussian_BernoulliDRBMWithDropout(Agent *a, va_list arg){
     InitializeBias4VisibleUnitsWithRandomValues(m);
     InitializeBias4LabelUnits(m);
     
-    classification_error = DiscriminativeGaussianBernoulliRBMTrainingbyContrastiveDivergencewithDropout(D, m, n_epochs, n_gibbs_sampling, batch_size, p, q);
+    classification_error = DiscriminativeGaussianBernoulliRBMTrainingbyContrastiveDivergencewithDropout(D, m, n_epochs, n_gibbs_sampling, batch_size, p);
     
     DestroyDRBM(&m);
     DestroyDataset(&D);
@@ -414,7 +411,7 @@ batch_size: mini-batch size
 sigma: input array with the variances associated to each visible unit */
 double Gaussian_BernoulliRBMWithDropout(Agent *a, va_list arg){
     int n_hidden_units, n_epochs, n_gibbs_sampling, batch_size;
-    double reconstruction_error, *eta_bound, p, q, *sigma;
+    double reconstruction_error, *eta_bound, p, *sigma;
     RBM *m = NULL;
     Subgraph *g = NULL;
     Dataset *D = NULL;
@@ -435,7 +432,6 @@ double Gaussian_BernoulliRBMWithDropout(Agent *a, va_list arg){
     m->eta_min = eta_bound[0];
     m->eta_max = eta_bound[1];
     p = a->x[4];
-    q = a->x[5];
         
     D = Subgraph2Dataset(g);
     
@@ -445,7 +441,7 @@ double Gaussian_BernoulliRBMWithDropout(Agent *a, va_list arg){
     InitializeBias4VisibleUnitsWithRandomValues(m);
     InitializeBias4LabelUnits(m);
     
-    reconstruction_error = GaussianBernoulliRBMTrainingbyContrastiveDivergencewithDropout(D, m, n_epochs, n_gibbs_sampling, batch_size, p, q);
+    reconstruction_error = GaussianBernoulliRBMTrainingbyContrastiveDivergencewithDropout(D, m, n_epochs, n_gibbs_sampling, batch_size, p);
     
     DestroyDRBM(&m);
     DestroyDataset(&D);

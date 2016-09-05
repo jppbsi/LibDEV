@@ -12,7 +12,7 @@ int main(int argc, char **argv){
     int i, j, z;
     int iteration = atoi(argv[4]), n_epochs = atoi(argv[7]), batch_size = atoi(argv[8]), n_gibbs_sampling = atoi(argv[9]);
     int n_hidden_units;
-    double *eta_bound, errorTrain, errorTest, p, q;
+    double *eta_bound, errorTrain, errorTest, p;
     FILE *f = NULL;
     Subgraph *Train = NULL, *Test = NULL;
     Dataset *DatasetTrain = NULL, *DatasetTest = NULL;
@@ -45,7 +45,6 @@ int main(int argc, char **argv){
     m->eta_min = eta_bound[0];
     m->eta_max = eta_bound[1];
     p = s->g[4];
-    q = s->g[5];
 
     InitializeWeights(m);
     InitializeLabelWeights(m);    
@@ -53,7 +52,7 @@ int main(int argc, char **argv){
     InitializeBias4VisibleUnitsWithRandomValues(m);
     InitializeBias4LabelUnits(m);
 
-    errorTrain = DiscriminativeBernoulliRBMTrainingbyContrastiveDivergencewithDropout(DatasetTrain, m, n_epochs, n_gibbs_sampling, batch_size, p, q);
+    errorTrain = DiscriminativeBernoulliRBMTrainingbyContrastiveDivergencewithDropout(DatasetTrain, m, n_epochs, n_gibbs_sampling, batch_size, p);
     
     fprintf(stderr,"\n\nRunning Dropout DRBM for classification on testing set ... ");
     errorTest = DiscriminativeBernoulliRBMClassification(DatasetTest, m);
