@@ -9,7 +9,7 @@ int main(int argc, char **argv){
     
     SearchSpace *s = NULL;
     int i;
-    double time;
+    double time, classification_error;
     timer tic, toc;
     FILE *f = NULL;
     TransferFunc optTransfer = NULL;
@@ -47,12 +47,21 @@ int main(int argc, char **argv){
     WriteSubgraph(newTest, "testing.pso.dat");
     fflush(stderr); fprintf(stderr,"\nOK\n");
     
+    opf_OPFTraining(newTrain);
+    opf_OPFClassifying(newTrain, newTest);
+    classification_error = opf_Accuracy(newTest);
+    
     f = fopen("best_feats.txt", "a");
-    fprintf(f, "%d", (int)s->g[0]);
+    fprintf(f, "%d %d", newTrain->nfeats, (int)s->g[0]);
     for(i = 1; i < Train->nfeats; i++){
 	    fprintf(f, " %d", (int)s->g[i]);
     }
     fprintf(f, "\n");
+    fclose(f);
+    
+    fprintf(stderr, "\nAccuracy: %.2lf%%\n", 100*classification_error);
+    f = fopen("final_accuracy.txt", "a");
+    fprintf(f, "%lf\n", classification_error);
     fclose(f);
     
     fflush(stderr); fprintf(stderr,"\nDeallocating memory ...");
