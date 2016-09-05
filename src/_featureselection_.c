@@ -272,29 +272,29 @@ Subgraph *V4TransferFunction(Subgraph *sg, double *feat){
 }
 
 /* It executes Feature Selection with OPF evaluation
-Parameters: [Train, Test, feats, optTransfer]
+Parameters: [Train, Evaluate, feats, optTransfer]
 Train: training set
-Test: testing set
+Evaluate: evaluating set
 feats: feature vector
 optTransfer: Transfer function pointer */
 double FeatureSelection(Agent *a, va_list arg){
     double classification_error;
     TransferFunc optTransfer = NULL;
-    Subgraph *Train = NULL, *Test = NULL;
-    Subgraph *sgTrain = NULL, *sgTest = NULL;
+    Subgraph *Train = NULL, *Evaluate = NULL;
+    Subgraph *sgTrain = NULL, *sgEvaluate = NULL;
         
     Train = va_arg(arg, Subgraph *);
-    Test = va_arg(arg, Subgraph *);
+    Evaluate = va_arg(arg, Subgraph *);
     optTransfer = va_arg(arg, TransferFunc);
     
     sgTrain = optTransfer(Train,a->x);
-    sgTest = optTransfer(Test,a->x);
+    sgEvaluate = optTransfer(Evaluate,a->x);
     opf_OPFTraining(sgTrain);
-    opf_OPFClassifying(sgTrain, sgTest);
-    classification_error = opf_Accuracy(sgTest);
+    opf_OPFClassifying(sgTrain, sgEvaluate);
+    classification_error = opf_Accuracy(sgEvaluate);
         
     DestroySubgraph(&sgTrain);
-    DestroySubgraph(&sgTest);
+    DestroySubgraph(&sgEvaluate);
 
     return 1-classification_error;
 }

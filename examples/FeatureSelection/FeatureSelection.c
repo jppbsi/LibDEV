@@ -2,8 +2,8 @@
 
 int main(int argc, char **argv){
 
-    if(argc != 4){
-        fprintf(stderr,"\nusage FeatureSelection <training set> <testing set> <search space configuration file>\n");
+    if(argc != 5){
+        fprintf(stderr,"\nusage FeatureSelection <training set> <evaluating set> <testing set> <search space configuration file>\n");
         exit(-1);
     }
     
@@ -13,11 +13,12 @@ int main(int argc, char **argv){
     timer tic, toc;
     FILE *f = NULL;
     TransferFunc optTransfer = NULL;
-    Subgraph *Train = NULL, *Test = NULL, *newTrain = NULL, *newTest = NULL;
+    Subgraph *Train = NULL, *Evaluate = NULL, *Merge = NULL, *Test = NULL, *newTrain = NULL, *newTest = NULL;
  
     Train = ReadSubgraph(argv[1]);
-    Test = ReadSubgraph(argv[2]);
-    s = ReadSearchSpaceFromFile(argv[3], _PSO_);
+    Evaluate = ReadSubgraph(argv[2]);
+    Test = ReadSubgraph(argv[3]);
+    s = ReadSearchSpaceFromFile(argv[4], _PSO_);
     optTransfer = S2TransferFunction;
     
     for (i = 0; i < Train->nfeats; i++){
@@ -31,12 +32,14 @@ int main(int argc, char **argv){
     
     fflush(stderr); fprintf(stderr,"\nRunning PSO ... ");
     gettimeofday(&tic,NULL);
-    runPSO(s, FeatureSelection, Train, Test, optTransfer);
+    runPSO(s, FeatureSelection, Train, Evaluate, optTransfer);
     gettimeofday(&toc,NULL);
     fflush(stderr); fprintf(stderr,"\nOK\n");
+    
+    Merge = opf_MergeSubgraph(Train, Evaluate);
         
     fflush(stderr); fprintf(stderr,"\nWriting new training and testing sets ...\n");
-    newTrain = CreateSubgraphFromSelectedFeatures(Train, s->g);
+    newTrain = CreateSubgraphFromSelectedFeatures(Merge, s->g);
     newTest = CreateSubgraphFromSelectedFeatures(Test, s->g);
     fprintf(stderr, "\nTraining set\n");
     WriteSubgraph(newTrain, "training.pso.dat");
@@ -54,6 +57,8 @@ int main(int argc, char **argv){
     
     fflush(stderr); fprintf(stderr,"\nDeallocating memory ...");
     DestroySubgraph(&Train);
+    DestroySubgraph(&Evaluate);
+    DestroySubgraph(&Merge);
     DestroySubgraph(&Test);
     DestroySubgraph(&newTrain);
     DestroySubgraph(&newTest);
