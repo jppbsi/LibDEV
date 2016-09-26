@@ -18,7 +18,7 @@ int main(int argc, char **argv){
     Train = ReadSubgraph(argv[1]);
     Evaluate = ReadSubgraph(argv[2]);
     Test = ReadSubgraph(argv[3]);
-    s = ReadSearchSpaceFromFile(argv[4], _GP_);
+    s = ReadSearchSpaceFromFile(argv[4], _PSO_);
     optTransfer = S2TransferFunction;
     
     for (i = 0; i < Train->nfeats; i++){
@@ -27,12 +27,12 @@ int main(int argc, char **argv){
     }
     
     fprintf(stderr,"\nInitializing search space ... ");
-    InitializeSearchSpace(s, _GP_);
+    InitializeSearchSpace(s, _PSO_);
     fprintf(stderr,"\nOk\n");
     
-    fflush(stderr); fprintf(stderr,"\nRunning GP ... ");
+    fflush(stderr); fprintf(stderr,"\nRunning PSO ... ");
     gettimeofday(&tic,NULL);
-    runGP(s, FeatureSelection, Train, Evaluate, optTransfer);
+    runPSO(s, FeatureSelection, Train, Evaluate, optTransfer);
     gettimeofday(&toc,NULL);
     fflush(stderr); fprintf(stderr,"\nOK\n");
     
@@ -85,7 +85,7 @@ int main(int argc, char **argv){
     fprintf(f,"%f %f\n",time_opt, time_classify);
     fclose(f);
     
-    DestroySearchSpace(&s, _GP_);
+    DestroySearchSpace(&s, _PSO_);
     
     return 0;
 }
