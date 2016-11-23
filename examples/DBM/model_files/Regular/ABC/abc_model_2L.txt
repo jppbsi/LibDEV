@@ -1,0 +1,10 @@
+10 8 10 # <n_particles> <dimension> <max_iterations>
+1000 # <number of trial limits>
+5 100 # <LB> <UB> number of hidden units
+0.01 0.1 # <LB> <UB> learning rate
+0.0002 0.002 # <LB> <UB> weight decay
+0.05 0.5 # <LB> <UB> momentum
+5 100 # <LB> <UB> number of hidden units
+0.01 0.1 # <LB> <UB> learning rate
+0.0002 0.002 # <LB> <UB> weight decay
+0.05 0.5 # <LB> <UB> momentum
