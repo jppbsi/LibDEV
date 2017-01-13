@@ -277,7 +277,7 @@ Train: training set
 Evaluate: evaluating set
 feats: feature vector
 optTransfer: Transfer function pointer */
-double FeatureSelection(Agent *a, va_list arg){
+double FeatureSelectionOPF(Agent *a, va_list arg){
     double classification_error;
     TransferFunc optTransfer = NULL;
     Subgraph *Train = NULL, *Evaluate = NULL;
@@ -297,5 +297,34 @@ double FeatureSelection(Agent *a, va_list arg){
     DestroySubgraph(&sgEvaluate);
 
     return 1-classification_error;
+}
+
+double *HammingTransfer(double *feat, int n){
+    int i, j, k;
+    double r;
+
+    for(j = 0; j < n; j++){
+        r = GenerateUniformRandomNumber(0, 1);
+        if(r < 1.0/(1.0+exp(-1*feat[j]))){
+            feat[j] = 1;
+        }else{
+            feat[j] = 0;
+        }
+    }
+
+    return feat;
+}
+
+/* It executes Feature Selection with Hamming Distance
+Parameters: [Train, Evaluate, feats, optTransfer]
+optTransfer: Transfer function pointer */
+double FeatureSelectionHamming(Agent *a, va_list arg){
+    double *input_vector, hamming_error;
+        
+    input_vector = va_arg(arg, double *);
+
+    hamming_error = Hamming_Distance(HammingTransfer(a->x, a->n), input_vector, a->n);
+
+    return hamming_error;
 }
 /***********************************************/
