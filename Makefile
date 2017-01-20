@@ -8,7 +8,7 @@ CC=gcc
 FLAGS=  -g -O0
 CFLAGS=''
 
-all: libdev OPFknn OPFcluster OPFpruning DBN DropoutDBN DropconnectDBN DBM DropoutDBM FeatureSelection RBM DropoutRBM DropconnectRBM DRBM DropoutDRBM GaussianDRBM DropoutGaussianDRBM EPNN GaussianRBM DropoutGaussianRBM LinearRegression LogisticRegression DBM_QPSO DBN_QPSO DBM_QBA DBN_QBA
+all: libdev OPFknn OPFcluster OPFpruning DBN DropoutDBN DropconnectDBN DBM DropoutDBM CombinatorialOPF FeatureSelectionOPF FeatureSelectionHamming RBM DropoutRBM DropconnectRBM DRBM DropoutDRBM GaussianDRBM DropoutGaussianDRBM EPNN GaussianRBM DropoutGaussianRBM LinearRegression LogisticRegression DBM_QPSO DBN_QPSO DBM_QBA DBN_QBA
 
 libdev: $(LIB)/libdev.a
 	echo "libdev.a built..."
@@ -101,8 +101,16 @@ EPNN: examples/EPNN/EPNN.c
 	$(CC) $(FLAGS) examples/EPNN/EPNN.c -o examples/bin/EPNN -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
     -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt-plus -lgsl -lgslcblas -lm;
 
-FeatureSelection: examples/FeatureSelection/FeatureSelection.c
-	$(CC) $(FLAGS) examples/FeatureSelection/FeatureSelection.c -o examples/bin/FeatureSelection -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+CombinatorialOPF: examples/FeatureSelection/CombinatorialOPF.c
+	$(CC) $(FLAGS) examples/FeatureSelection/CombinatorialOPF.c -o examples/bin/CombinatorialOPF -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt-plus -lgsl -lgslcblas -lm;
+
+FeatureSelectionOPF: examples/FeatureSelection/FeatureSelectionOPF.c
+	$(CC) $(FLAGS) examples/FeatureSelection/FeatureSelectionOPF.c -o examples/bin/FeatureSelectionOPF -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt-plus -lgsl -lgslcblas -lm;
+
+FeatureSelectionHamming: examples/FeatureSelection/FeatureSelectionHamming.c
+	$(CC) $(FLAGS) examples/FeatureSelection/FeatureSelectionHamming.c -o examples/bin/FeatureSelectionHamming -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
     -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt-plus -lgsl -lgslcblas -lm;
 
 RBM: examples/RBM/RBM.c

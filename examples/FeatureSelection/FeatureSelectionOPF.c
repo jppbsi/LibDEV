@@ -32,7 +32,7 @@ int main(int argc, char **argv){
     
     fflush(stderr); fprintf(stderr,"\nRunning PSO ... ");
     gettimeofday(&tic,NULL);
-    runPSO(s, FeatureSelection, Train, Evaluate, optTransfer);
+    runPSO(s, FeatureSelectionOPF, Train, Evaluate, optTransfer);
     gettimeofday(&toc,NULL);
     fflush(stderr); fprintf(stderr,"\nOK\n");
     
