@@ -8,7 +8,7 @@ CC=gcc
 FLAGS=  -g -O0
 CFLAGS=''
 
-all: libdev OPFknn OPFcluster OPFpruning DBN DropoutDBN DropconnectDBN DBM DropoutDBM CombinatorialOPF FeatureSelectionOPF  RBM DropoutRBM DropconnectRBM DRBM DropoutDRBM GaussianDRBM DropoutGaussianDRBM EPNN GaussianRBM DropoutGaussianRBM LinearRegression LogisticRegression DBM_QPSO DBN_QPSO DBM_QBA DBN_QBA DBM_QCS DBN_QCS
+all: libdev OPFknn OPFcluster OPFpruning DBN DropoutDBN DropconnectDBN DBM TensorDBM DropoutDBM CombinatorialOPF FeatureSelectionOPF FeatureSelectionHamming RBM DropoutRBM DropconnectRBM DRBM DropoutDRBM GaussianDRBM DropoutGaussianDRBM EPNN GaussianRBM DropoutGaussianRBM LinearRegression LogisticRegression
 
 libdev: $(LIB)/libdev.a
 	echo "libdev.a built..."
@@ -93,6 +93,10 @@ DBM: examples/DBM/DBM.c
 	$(CC) $(FLAGS) examples/DBM/DBM.c -o examples/bin/DBM -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
     -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt-plus -lgsl -lgslcblas -lm;
 
+TensorDBM: examples/DBM/TensorDBM.c
+	$(CC) $(FLAGS) examples/DBM/TensorDBM.c -o examples/bin/TensorDBM -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt-plus -lgsl -lgslcblas -lm;
+
 DropoutDBM: examples/DBM/DropoutDBM.c
 	$(CC) $(FLAGS) examples/DBM/DropoutDBM.c -o examples/bin/DropoutDBM -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
     -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt-plus -lgsl -lgslcblas -lm;
@@ -107,6 +111,10 @@ CombinatorialOPF: examples/FeatureSelection/CombinatorialOPF.c
 
 FeatureSelectionOPF: examples/FeatureSelection/FeatureSelectionOPF.c
 	$(CC) $(FLAGS) examples/FeatureSelection/FeatureSelectionOPF.c -o examples/bin/FeatureSelectionOPF -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt-plus -lgsl -lgslcblas -lm;
+
+FeatureSelectionHamming: examples/FeatureSelection/FeatureSelectionHamming.c
+	$(CC) $(FLAGS) examples/FeatureSelection/FeatureSelectionHamming.c -o examples/bin/FeatureSelectionHamming -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
     -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt-plus -lgsl -lgslcblas -lm;
 
 RBM: examples/RBM/RBM.c
@@ -153,28 +161,6 @@ LogisticRegression: examples/LogisticRegression/LogisticRegression.c
 	$(CC) $(FLAGS) examples/LogisticRegression/LogisticRegression.c -o examples/bin/LogisticRegression -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
     -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt-plus -lgsl -lgslcblas -lm;
 
-DBM_QPSO: examples/DBM/DBM_QPSO.c
-	$(CC) $(FLAGS) examples/DBM/DBM_QPSO.c -o examples/bin/DBM_QPSO -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
-    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt-plus -lgsl -lgslcblas -lm;
 
-DBN_QPSO: examples/DBN/DBN_QPSO.c
-	$(CC) $(FLAGS) examples/DBN/DBN_QPSO.c -o examples/bin/DBN_QPSO -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
-    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt-plus -lgsl -lgslcblas -lm;
-
-DBM_QBA: examples/DBM/DBM_QBA.c
-	$(CC) $(FLAGS) examples/DBM/DBM_QBA.c -o examples/bin/DBM_QBA -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
-    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt-plus -lgsl -lgslcblas -lm;
-
-DBN_QBA: examples/DBN/DBN_QBA.c
-	$(CC) $(FLAGS) examples/DBN/DBN_QBA.c -o examples/bin/DBN_QBA -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
-    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt-plus -lgsl -lgslcblas -lm;
-
-DBM_QCS: examples/DBM/DBM_QCS.c
-	$(CC) $(FLAGS) examples/DBM/DBM_QCS.c -o examples/bin/DBM_QCS -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
-    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt-plus -lgsl -lgslcblas -lm;
-
-DBN_QCS: examples/DBN/DBN_QCS.c
-	$(CC) $(FLAGS) examples/DBN/DBN_QCS.c -o examples/bin/DBN_QCS -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
-    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt-plus -lgsl -lgslcblas -lm;
-clean:
+clean: 
 	rm -f $(LIB)/lib*.a; rm -f $(OBJ)/*.o; rm -rf examples/bin/*
