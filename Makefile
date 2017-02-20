@@ -8,7 +8,7 @@ CC=gcc
 FLAGS=  -g -O0
 CFLAGS=''
 
-all: libdev OPFknn OPFcluster OPFpruning DBN DropoutDBN DropconnectDBN DBM TensorDBM DropoutDBM CombinatorialOPF FeatureSelectionOPF FeatureSelectionHamming RBM TensorRBM DropoutRBM DropconnectRBM DRBM DropoutDRBM GaussianDRBM DropoutGaussianDRBM EPNN GaussianRBM DropoutGaussianRBM LinearRegression LogisticRegression
+all: libdev OPFknn OPFcluster OPFpruning DBN TensorDBN DropoutDBN DropconnectDBN DBM TensorDBM DropoutDBM CombinatorialOPF FeatureSelectionOPF FeatureSelectionHamming RBM TensorRBM DropoutRBM DropconnectRBM DRBM DropoutDRBM GaussianDRBM DropoutGaussianDRBM EPNN GaussianRBM DropoutGaussianRBM LinearRegression LogisticRegression
 
 libdev: $(LIB)/libdev.a
 	echo "libdev.a built..."
@@ -79,6 +79,10 @@ OPFpruning: examples/OPF/OPFpruning.c
 
 DBN: examples/DBN/DBN.c
 	$(CC) $(FLAGS) examples/DBN/DBN.c -o examples/bin/DBN -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt-plus -lgsl -lgslcblas -lm;
+
+TensorDBN: examples/DBN/TensorDBN.c
+	$(CC) $(FLAGS) examples/DBN/TensorDBN.c -o examples/bin/TensorDBN -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
     -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt-plus -lgsl -lgslcblas -lm;
 
 DropoutDBN: examples/DBN/DropoutDBN.c

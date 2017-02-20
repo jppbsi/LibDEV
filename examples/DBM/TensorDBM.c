@@ -8,7 +8,6 @@ int main(int argc, char **argv){
         exit(-1);
     }
 
-
     SearchSpace *s = NULL;
     int i, j, z;
     int iteration = atoi(argv[4]), n_epochs = atoi(argv[7]), batch_size = atoi(argv[8]), n_gibbs_sampling = atoi(argv[9]), op = atoi(argv[10]);
