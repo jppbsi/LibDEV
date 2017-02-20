@@ -2,12 +2,11 @@
 
 int main(int argc, char **argv){
     if(argc != 12){
-        fprintf(stderr,"\nUsage: DBM <training set> <testing set> <output results file name> <cross-validation iteration number> \
+        fprintf(stderr,"\nUsage: DBN <training set> <testing set> <output results file name> <cross-validation iteration number> \
                 <search space configuration file> <output best parameters file name> <n_epochs> <batch_size> \
-                <number of iterations for Constrastive Divergence> <1 - CD | 2 - PCD | 3 - FPCD> <number of DBM layers>");
+                <number of iterations for Constrastive Divergence> <1 - CD | 2 - PCD | 3 - FPCD> <number of DBN layers>");
         exit(-1);
     }
-
     
     SearchSpace *s = NULL;
     int i, j, z;
@@ -17,14 +16,14 @@ int main(int argc, char **argv){
     FILE *f = NULL;
     Subgraph *Train = NULL, *Test = NULL;
     Dataset *DatasetTrain = NULL, *DatasetTest = NULL;
-    DBM *d = NULL;
+    DBN *d = NULL;
     
     Train = ReadSubgraph(argv[1]);
     Test = ReadSubgraph(argv[2]);
     DatasetTrain = Subgraph2Dataset(Train);
     DatasetTest = Subgraph2Dataset(Test);
     
-    s = ReadSearchSpaceFromFile(argv[5], _CS_);
+    s = ReadSearchSpaceFromFile(argv[5], _PSO_);
     
     eta_bound = (double **)calloc(2, sizeof(double *));
     for (i = 0; i < 2; i++)
@@ -35,28 +34,22 @@ int main(int argc, char **argv){
         eta_bound[1][i] = s->UB[z];
         z+=4;
     }
-
-    s->t_g = AllocateTensor(s->n, _QUATERNION_);
-    for (i = 0; i < s->m; i++)
-        s->a[i]->t = AllocateTensor(s->n, _QUATERNION_); /* It allocates a new tensor for each agent */
-
     
     fprintf(stderr,"\nInitializing search space ... ");
-    InitializeTensorSearchSpace(s, _QUATERNION_);
+    InitializeSearchSpace(s, _PSO_);
     fprintf(stderr,"\nOk\n");
     
-    fprintf(stderr,"\nRunning CS ... ");
-    if (CheckSearchSpace(s, _CS_)) /* It checks whether the search space is valid or not */
-        runTensorCS(s, _QUATERNION_, Bernoulli_BernoulliDBM4Reconstruction, Train, op, n_layers, n_epochs, batch_size, n_gibbs_sampling, eta_bound); /* It minimizes function Sphere */
+    fprintf(stderr,"\nRunning PSO ... ");
+    runPSO(s, Bernoulli_BernoulliDBN4Reconstruction, Train, op, n_layers, n_epochs, batch_size, n_gibbs_sampling, eta_bound);
     
-    fprintf(stderr,"\n\nRunning DBM with best parameters on training set ... ");
+    fprintf(stderr,"\n\nRunning DBN with best parameters on training set ... ");
     n_hidden_units = (int *)calloc(n_layers, sizeof(int));
     j = 0;
     for(i = 0; i < n_layers; i++){
         n_hidden_units[i] = s->g[j]; j+=4;
     } 
-    d = CreateNewDBM(Train->nfeats, n_hidden_units, Train->nlabels, n_layers);
-    InitializeDBM(d);
+    d = CreateNewDBN(Train->nfeats, n_hidden_units, Train->nlabels, n_layers);
+    InitializeDBN(d);
     j = 1;
     for(i = 0; i < d->n_layers; i++){
         d->m[i]->eta = s->g[j]; j++;
@@ -65,11 +58,20 @@ int main(int argc, char **argv){
         d->m[i]->eta_min = eta_bound[0][i];
         d->m[i]->eta_max = eta_bound[1][i];
     }        
-
-    errorTrain = GreedyPreTrainingDBM(DatasetTrain, d, n_epochs, n_gibbs_sampling, batch_size, op);
+    switch (op){
+        case 1:
+            errorTrain = BernoulliDBNTrainingbyContrastiveDivergence(DatasetTrain, d, n_epochs, n_gibbs_sampling, batch_size);
+        break;
+        case 2:
+            errorTrain = BernoulliDBNTrainingbyPersistentContrastiveDivergence(DatasetTrain, d, n_epochs, n_gibbs_sampling, batch_size);
+        break;
+        case 3:
+            errorTrain = BernoulliDBNTrainingbyFastPersistentContrastiveDivergence(DatasetTrain, d, n_epochs, n_gibbs_sampling, batch_size);
+        break;
+    }
     
-    fprintf(stderr,"\n\nRunning DBM for reconstruction on testing set ... ");
-    errorTest = BernoulliDBMReconstruction(DatasetTest, d);
+    fprintf(stderr,"\n\nRunning DBN for reconstruction on testing set ... ");
+    errorTest = BernoulliDBNReconstruction(DatasetTest, d);
     fprintf(stderr,"\nOK\n");
     
     fprintf(stderr,"\nTraining error: %lf\nTesting error: %lf\n", errorTrain, errorTest);
@@ -86,21 +88,17 @@ int main(int argc, char **argv){
     fprintf(f, "\n");
     fclose(f);
     fprintf(stderr, "Ok!\n");
-
-    DeallocateTensor(&s->t_g, s->n);
-    for (i = 0; i < s->m; i++)
-        DeallocateTensor(&s->a[i]->t, s->n); /* It deallocates the tensor for each agent */
         
     for (i = 0; i < 2; i++)
         free(eta_bound[i]);
     free(eta_bound);
     free(n_hidden_units);
-    DestroySearchSpace(&s, _CS_);
+    DestroySearchSpace(&s, _PSO_);
     DestroyDataset(&DatasetTrain);
     DestroyDataset(&DatasetTest);
     DestroySubgraph(&Train);
     DestroySubgraph(&Test);
-    DestroyDBM(&d);
+    DestroyDBN(&d);
     
     return 0;
 }
