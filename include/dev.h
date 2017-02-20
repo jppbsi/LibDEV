@@ -20,6 +20,7 @@ extern "C" {
 #include "cs.h"
 #include "gp.h"
 #include "bha.h"
+#include "hs.h"
 
 #include "_opf_.h"
 #include "_dbn_.h"
