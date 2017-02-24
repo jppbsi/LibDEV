@@ -1,0 +1,5 @@
+10 1 10 # <n_particles> <dimension> <max_iterations>
+0.7 # <HMCR>
+0.7 0 1 # <PAR> <PAR_min> <PAR_max>
+10 0 20 # <bw> <bw_min> <bw_max>
+0 0.01 # <LB> <UB> learning rate

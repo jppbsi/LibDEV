@@ -1,4 +1,4 @@
-5 4 10 # <n_particles> <dimension> <max_iterations>
+5 5 10 # <n_particles> <dimension> <max_iterations>
 0.7 # <HMCR>
 0.7 0 1 # <PAR> <PAR_min> <PAR_max>
 10 0 20 # <bw> <bw_min> <bw_max>
@@ -6,3 +6,4 @@
 0.01 0.1 # <LB> <UB> learning rate
 0.0002 0.002 # <LB> <UB> weight decay
 0.05 0.5 # <LB> <UB> momentum
+0.1 1 # <LB> <UB> hidden units dropout rate
