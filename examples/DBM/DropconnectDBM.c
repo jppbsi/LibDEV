@@ -2,7 +2,7 @@
 
 int main(int argc, char **argv){
     if(argc != 12){
-        fprintf(stderr,"\nUsage: DropoutDBM <training set> <testing set> <output results file name> <cross-validation iteration number> \
+        fprintf(stderr,"\nUsage: DropconnectDBM <training set> <testing set> <output results file name> <cross-validation iteration number> \
                 <search space configuration file> <output best parameters file name> <n_epochs> <batch_size> \
                 <number of iterations for Constrastive Divergence> <1 - CD | 2 - PCD | 3 - FPCD> <number of DBM layers>");
         exit(-1);
@@ -40,9 +40,9 @@ int main(int argc, char **argv){
     fprintf(stderr,"\nOk\n");
 
     fprintf(stderr,"\nRunning PSO ... ");
-    runPSO(s, Bernoulli_BernoulliDBM4ReconstructionWithDropout, Train, op, n_layers, n_epochs, batch_size, n_gibbs_sampling, eta_bound);
+    runPSO(s, Bernoulli_BernoulliDBM4ReconstructionWithDropconnect, Train, op, n_layers, n_epochs, batch_size, n_gibbs_sampling, eta_bound);
 
-    fprintf(stderr,"\n\nRunning Dropout DBM with best parameters on training set ... ");
+    fprintf(stderr,"\n\nRunning Dropconnect DBM with best parameters on training set ... ");
     n_hidden_units = (int *)calloc(n_layers, sizeof(int));
     j = 0;
     for(i = 0; i < n_layers; i++){
@@ -61,9 +61,9 @@ int main(int argc, char **argv){
         d->m[i]->eta_max = eta_bound[1][i];
     }
 
-    errorTrain = GreedyPreTrainingDBMwithDropout(DatasetTrain, d, n_epochs, n_gibbs_sampling, batch_size, op, p);
+    errorTrain = GreedyPreTrainingDBMwithDropconnect(DatasetTrain, d, n_epochs, n_gibbs_sampling, batch_size, op, p);
 
-    fprintf(stderr,"\n\nRunning DropoutDBM for reconstruction on testing set ... ");
+    fprintf(stderr,"\n\nRunning DropconnectDBM for reconstruction on testing set ... ");
     errorTest = BernoulliDBMReconstruction(DatasetTest, d);
     fprintf(stderr,"\nOK\n");
 
