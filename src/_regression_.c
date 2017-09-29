@@ -9,34 +9,38 @@ X: input data
 Y: target values:
 m: matrix first dimension
 n: matrix second dimension */
-void LoadData(char *fileName, double ***X, double **Y, int *m, int *n){
+void LoadData(char *fileName, double ***X, double **Y, int *m, int *n)
+{
         FILE *fp = NULL;
-        int i,j, m_tmp, n_tmp;
+        int i, j, m_tmp, n_tmp;
         double value;
         double **X_tmp = *X;
         double *Y_tmp = *Y;
-        
+
         fp = fopen(fileName, "r");
-        if(!fp){
-                fprintf(stderr,"\nunable to open file %s\n", fileName);
+        if (!fp)
+        {
+                fprintf(stderr, "\nunable to open file %s\n", fileName);
                 exit(-1);
         }
-        
-        fscanf(fp,"%d %d", &m_tmp, &n_tmp);
+
+        fscanf(fp, "%d %d", &m_tmp, &n_tmp);
         X_tmp = (double **)calloc(m_tmp, sizeof(double *));
         for (i = 0; i < m_tmp; i++)
-                X_tmp[i] = (double *)calloc(n_tmp+1, sizeof(double)); /* Adding extra dimension for x0 */
+                X_tmp[i] = (double *)calloc(n_tmp + 1, sizeof(double)); /* Adding extra dimension for x0 */
         Y_tmp = (double *)calloc(m_tmp, sizeof(double));
-                        
-        for(i = 0; i < m_tmp; i++){
-                fscanf(fp,"%lf",&value); /* Reading the target first */
+
+        for (i = 0; i < m_tmp; i++)
+        {
+                fscanf(fp, "%lf", &value); /* Reading the target first */
                 Y_tmp[i] = value;
                 X_tmp[i][0] = 1; /* Setting up x0 value */
-                for (j = 1; j < n_tmp+1; j++){
-                        fscanf(fp,"%lf",&value);
+                for (j = 1; j < n_tmp + 1; j++)
+                {
+                        fscanf(fp, "%lf", &value);
                         X_tmp[i][j] = value; /* Reading input features */
                 }
-        }            
+        }
         fclose(fp);
         *X = X_tmp;
         *Y = Y_tmp;
@@ -53,21 +57,22 @@ Y: target values
 m: matrix first dimension
 n: matrix second dimension
 w: parameters of the linear function */
-double LinearRegression_Optimization(Agent *a, va_list arg){
-    int i, j, m, n;
-    double alpha, error, *w, **X, *Y;
-    
-    X = va_arg(arg, double **);
-    Y = va_arg(arg, double *);
-    m = va_arg(arg, int);
-    n = va_arg(arg, int);
-    w = va_arg(arg, double *);
-    
-    alpha = a->x[0];
-   
-    error = LinearRegression_Fitting(X, Y, m, n, alpha, w);
-    
-    return error;
+double LinearRegression_Optimization(Agent *a, va_list arg)
+{
+        int i, j, m, n;
+        double alpha, error, *w, **X, *Y;
+
+        X = va_arg(arg, double **);
+        Y = va_arg(arg, double *);
+        m = va_arg(arg, int);
+        n = va_arg(arg, int);
+        w = va_arg(arg, double *);
+
+        alpha = a->x[0];
+
+        error = LinearRegression_Fitting(X, Y, m, n, alpha, w);
+
+        return error;
 }
 
 /* Logistic Regression */
@@ -76,18 +81,19 @@ double LinearRegression_Optimization(Agent *a, va_list arg){
 Parameters: [g, w]
 g: training graph
 w: parameters of the linear function */
-double LogisticRegression_Optimization(Agent *a, va_list arg){
-    int i, j;
-    double alpha, error, *w;
-    Subgraph *g = NULL;
-    
-    g = va_arg(arg, Subgraph *);
-    w = va_arg(arg, double *);
-    
-    alpha = a->x[0];
-   
-    error = LogisticRegression_Fitting(g, alpha, w);
-    
-    return error;
+double LogisticRegression_Optimization(Agent *a, va_list arg)
+{
+        int i, j;
+        double alpha, error, *w;
+        Subgraph *g = NULL;
+
+        g = va_arg(arg, Subgraph *);
+        w = va_arg(arg, double *);
+
+        alpha = a->x[0];
+
+        error = LogisticRegression_Fitting(g, alpha, w);
+
+        return error;
 }
 /***********************************************/

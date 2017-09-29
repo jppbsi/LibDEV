@@ -3,25 +3,29 @@
 /* Feature Selection */
 
 /* It creates a subgraph only with the selected features*/
-Subgraph *CreateSubgraphFromSelectedFeatures(Subgraph *sg, double *feat){
+Subgraph *CreateSubgraphFromSelectedFeatures(Subgraph *sg, double *feat)
+{
     Subgraph *newsg = CreateSubgraph(sg->nnodes);
     int i, j, k;
 
     newsg->nlabels = sg->nlabels;
     newsg->nfeats = 0;
 
-    for (i = 0; i < sg->nfeats; i++){
-        if(feat[i])
+    for (i = 0; i < sg->nfeats; i++)
+    {
+        if (feat[i])
             newsg->nfeats++;
     }
-    
-    for (i = 0; i < newsg->nnodes; i++){
+
+    for (i = 0; i < newsg->nnodes; i++)
+    {
         newsg->node[i].feat = AllocFloatArray(newsg->nfeats);
         newsg->node[i].truelabel = sg->node[i].truelabel;
         newsg->node[i].position = sg->node[i].position;
         k = 0;
-        for (j = 0; j < sg->nfeats; j++){
-            if(feat[j])
+        for (j = 0; j < sg->nfeats; j++)
+        {
+            if (feat[j])
                 newsg->node[i].feat[k++] = sg->node[i].feat[j];
         }
     }
@@ -30,17 +34,22 @@ Subgraph *CreateSubgraphFromSelectedFeatures(Subgraph *sg, double *feat){
 }
 
 /* Transfer functions used for feature selection */
-Subgraph *S1TransferFunction(Subgraph *sg, double *feat){
+Subgraph *S1TransferFunction(Subgraph *sg, double *feat)
+{
     Subgraph *newsg = CreateSubgraph(sg->nnodes);
     int i, j, k, nfeats = 0;
     double r;
-                    
-    for(j = 0; j < sg->nfeats; j++){
+
+    for (j = 0; j < sg->nfeats; j++)
+    {
         r = GenerateUniformRandomNumber(0, 1);
-        if(r < 1.0/(1.0+exp(-2*feat[j]))){
+        if (r < 1.0 / (1.0 + exp(-2 * feat[j])))
+        {
             feat[j] = 1;
             nfeats++;
-        }else{
+        }
+        else
+        {
             feat[j] = 0;
         }
     }
@@ -48,223 +57,274 @@ Subgraph *S1TransferFunction(Subgraph *sg, double *feat){
     newsg->nlabels = sg->nlabels;
     newsg->nfeats = nfeats;
 
-    for (i = 0; i < newsg->nnodes; i++){
+    for (i = 0; i < newsg->nnodes; i++)
+    {
         newsg->node[i].feat = AllocFloatArray(newsg->nfeats);
         newsg->node[i].truelabel = sg->node[i].truelabel;
         newsg->node[i].position = sg->node[i].position;
         k = 0;
-        for (j = 0; j < sg->nfeats; j++){
-            if(feat[j])
+        for (j = 0; j < sg->nfeats; j++)
+        {
+            if (feat[j])
                 newsg->node[i].feat[k++] = sg->node[i].feat[j];
         }
     }
     return newsg;
 }
 
-Subgraph *S2TransferFunction(Subgraph *sg, double *feat){
+Subgraph *S2TransferFunction(Subgraph *sg, double *feat)
+{
     Subgraph *newsg = CreateSubgraph(sg->nnodes);
     int i, j, k, nfeats = 0;
     double r;
 
-    for(j = 0; j < sg->nfeats; j++){
+    for (j = 0; j < sg->nfeats; j++)
+    {
         r = GenerateUniformRandomNumber(0, 1);
-        if(r < 1.0/(1.0+exp(-1*feat[j]))){
+        if (r < 1.0 / (1.0 + exp(-1 * feat[j])))
+        {
             feat[j] = 1;
             nfeats++;
-        }else{
+        }
+        else
+        {
             feat[j] = 0;
         }
     }
     newsg->nlabels = sg->nlabels;
     newsg->nfeats = nfeats;
 
-    for (i = 0; i < newsg->nnodes; i++){
+    for (i = 0; i < newsg->nnodes; i++)
+    {
         newsg->node[i].feat = AllocFloatArray(newsg->nfeats);
         newsg->node[i].truelabel = sg->node[i].truelabel;
         newsg->node[i].position = sg->node[i].position;
         k = 0;
-        for (j = 0; j < sg->nfeats; j++){
-            if(feat[j])
+        for (j = 0; j < sg->nfeats; j++)
+        {
+            if (feat[j])
                 newsg->node[i].feat[k++] = sg->node[i].feat[j];
         }
     }
     return newsg;
 }
 
-Subgraph *S3TransferFunction(Subgraph *sg, double *feat){
+Subgraph *S3TransferFunction(Subgraph *sg, double *feat)
+{
     Subgraph *newsg = CreateSubgraph(sg->nnodes);
     int i, j, k, nfeats = 0;
     double r;
 
-    for(j = 0; j < sg->nfeats; j++){
+    for (j = 0; j < sg->nfeats; j++)
+    {
         r = GenerateUniformRandomNumber(0, 1);
-        if(r < 1.0/(1.0+exp(-1*feat[j]/2))){
+        if (r < 1.0 / (1.0 + exp(-1 * feat[j] / 2)))
+        {
             feat[j] = 1;
             nfeats++;
-        }else{
+        }
+        else
+        {
             feat[j] = 0;
         }
     }
     newsg->nlabels = sg->nlabels;
     newsg->nfeats = nfeats;
 
-    for (i = 0; i < newsg->nnodes; i++){
+    for (i = 0; i < newsg->nnodes; i++)
+    {
         newsg->node[i].feat = AllocFloatArray(newsg->nfeats);
         newsg->node[i].truelabel = sg->node[i].truelabel;
         newsg->node[i].position = sg->node[i].position;
         k = 0;
-        for (j = 0; j < sg->nfeats; j++){
-            if(feat[j])
+        for (j = 0; j < sg->nfeats; j++)
+        {
+            if (feat[j])
                 newsg->node[i].feat[k++] = sg->node[i].feat[j];
         }
     }
     return newsg;
 }
 
-Subgraph *S4TransferFunction(Subgraph *sg, double *feat){
+Subgraph *S4TransferFunction(Subgraph *sg, double *feat)
+{
     Subgraph *newsg = CreateSubgraph(sg->nnodes);
     int i, j, k, nfeats = 0;
     double r;
 
-    for(j = 0; j < sg->nfeats; j++){
+    for (j = 0; j < sg->nfeats; j++)
+    {
         r = GenerateUniformRandomNumber(0, 1);
-        if(r < 1.0/(1.0+exp(-1*feat[j]/3))){
+        if (r < 1.0 / (1.0 + exp(-1 * feat[j] / 3)))
+        {
             feat[j] = 1;
             nfeats++;
-        }else{
+        }
+        else
+        {
             feat[j] = 0;
         }
     }
     newsg->nlabels = sg->nlabels;
     newsg->nfeats = nfeats;
 
-    for (i = 0; i < newsg->nnodes; i++){
+    for (i = 0; i < newsg->nnodes; i++)
+    {
         newsg->node[i].feat = AllocFloatArray(newsg->nfeats);
         newsg->node[i].truelabel = sg->node[i].truelabel;
         newsg->node[i].position = sg->node[i].position;
         k = 0;
-        for (j = 0; j < sg->nfeats; j++){
-            if(feat[j])
+        for (j = 0; j < sg->nfeats; j++)
+        {
+            if (feat[j])
                 newsg->node[i].feat[k++] = sg->node[i].feat[j];
         }
     }
     return newsg;
 }
 
-Subgraph *V1TransferFunction(Subgraph *sg, double *feat){
+Subgraph *V1TransferFunction(Subgraph *sg, double *feat)
+{
     Subgraph *newsg = CreateSubgraph(sg->nnodes);
     int i, j, k, nfeats = 0;
     double r;
 
-    for(j = 0; j < sg->nfeats; j++){
+    for (j = 0; j < sg->nfeats; j++)
+    {
         r = GenerateUniformRandomNumber(0, 1);
-        if(r < fabs(erf(sqrt(3.1415926535)/2*(-1*feat[j])))){
+        if (r < fabs(erf(sqrt(3.1415926535) / 2 * (-1 * feat[j]))))
+        {
             feat[j] = 1;
             nfeats++;
-        }else{
+        }
+        else
+        {
             feat[j] = 0;
         }
     }
     newsg->nlabels = sg->nlabels;
     newsg->nfeats = nfeats;
 
-    for (i = 0; i < newsg->nnodes; i++){
+    for (i = 0; i < newsg->nnodes; i++)
+    {
         newsg->node[i].feat = AllocFloatArray(newsg->nfeats);
         newsg->node[i].truelabel = sg->node[i].truelabel;
         newsg->node[i].position = sg->node[i].position;
         k = 0;
-        for (j = 0; j < sg->nfeats; j++){
-            if(feat[j])
+        for (j = 0; j < sg->nfeats; j++)
+        {
+            if (feat[j])
                 newsg->node[i].feat[k++] = sg->node[i].feat[j];
         }
     }
     return newsg;
 }
 
-Subgraph *V2TransferFunction(Subgraph *sg, double *feat){
+Subgraph *V2TransferFunction(Subgraph *sg, double *feat)
+{
     Subgraph *newsg = CreateSubgraph(sg->nnodes);
     int i, j, k, nfeats = 0;
     double r;
 
-    for(j = 0; j < sg->nfeats; j++){
+    for (j = 0; j < sg->nfeats; j++)
+    {
         r = GenerateUniformRandomNumber(0, 1);
-        if(r < fabs(tanhf(-1*feat[j]))){
+        if (r < fabs(tanhf(-1 * feat[j])))
+        {
             feat[j] = 1;
             nfeats++;
-        }else{
+        }
+        else
+        {
             feat[j] = 0;
         }
     }
     newsg->nlabels = sg->nlabels;
     newsg->nfeats = nfeats;
 
-    for (i = 0; i < newsg->nnodes; i++){
+    for (i = 0; i < newsg->nnodes; i++)
+    {
         newsg->node[i].feat = AllocFloatArray(newsg->nfeats);
         newsg->node[i].truelabel = sg->node[i].truelabel;
         newsg->node[i].position = sg->node[i].position;
         k = 0;
-        for (j = 0; j < sg->nfeats; j++){
-            if(feat[j])
+        for (j = 0; j < sg->nfeats; j++)
+        {
+            if (feat[j])
                 newsg->node[i].feat[k++] = sg->node[i].feat[j];
         }
     }
     return newsg;
 }
 
-Subgraph *V3TransferFunction(Subgraph *sg, double *feat){
+Subgraph *V3TransferFunction(Subgraph *sg, double *feat)
+{
     Subgraph *newsg = CreateSubgraph(sg->nnodes);
     int i, j, k, nfeats = 0;
     double r;
 
-    for(j = 0; j < sg->nfeats; j++){
+    for (j = 0; j < sg->nfeats; j++)
+    {
         r = GenerateUniformRandomNumber(0, 1);
-        if(r < fabs(-1*feat[j]/sqrt(1 + (-1*(feat[j]*feat[j]))))){
+        if (r < fabs(-1 * feat[j] / sqrt(1 + (-1 * (feat[j] * feat[j])))))
+        {
             feat[j] = 1;
             nfeats++;
-        }else{
+        }
+        else
+        {
             feat[j] = 0;
         }
     }
     newsg->nlabels = sg->nlabels;
     newsg->nfeats = nfeats;
 
-    for (i = 0; i < newsg->nnodes; i++){
+    for (i = 0; i < newsg->nnodes; i++)
+    {
         newsg->node[i].feat = AllocFloatArray(newsg->nfeats);
         newsg->node[i].truelabel = sg->node[i].truelabel;
         newsg->node[i].position = sg->node[i].position;
         k = 0;
-        for (j = 0; j < sg->nfeats; j++){
-            if(feat[j])
+        for (j = 0; j < sg->nfeats; j++)
+        {
+            if (feat[j])
                 newsg->node[i].feat[k++] = sg->node[i].feat[j];
         }
     }
     return newsg;
 }
 
-Subgraph *V4TransferFunction(Subgraph *sg, double *feat){
+Subgraph *V4TransferFunction(Subgraph *sg, double *feat)
+{
     Subgraph *newsg = CreateSubgraph(sg->nnodes);
     int i, j, k, nfeats = 0;
     double r;
 
-    for(j = 0; j < sg->nfeats; j++){
+    for (j = 0; j < sg->nfeats; j++)
+    {
         r = GenerateUniformRandomNumber(0, 1);
-        if(r < fabs(2/3.1415926535  * atan(3.1415926535/2 * (-1*feat[j])))){
+        if (r < fabs(2 / 3.1415926535 * atan(3.1415926535 / 2 * (-1 * feat[j]))))
+        {
             feat[j] = 1;
             nfeats++;
-        }else{
+        }
+        else
+        {
             feat[j] = 0;
         }
     }
     newsg->nlabels = sg->nlabels;
     newsg->nfeats = nfeats;
 
-    for (i = 0; i < newsg->nnodes; i++){
+    for (i = 0; i < newsg->nnodes; i++)
+    {
         newsg->node[i].feat = AllocFloatArray(newsg->nfeats);
         newsg->node[i].truelabel = sg->node[i].truelabel;
         newsg->node[i].position = sg->node[i].position;
         k = 0;
-        for (j = 0; j < sg->nfeats; j++){
-            if(feat[j])
+        for (j = 0; j < sg->nfeats; j++)
+        {
+            if (feat[j])
                 newsg->node[i].feat[k++] = sg->node[i].feat[j];
         }
     }
@@ -277,37 +337,43 @@ Train: training set
 Evaluate: evaluating set
 feats: feature vector
 optTransfer: Transfer function pointer */
-double FeatureSelectionOPF(Agent *a, va_list arg){
+double FeatureSelectionOPF(Agent *a, va_list arg)
+{
     double classification_error;
     TransferFunc optTransfer = NULL;
     Subgraph *Train = NULL, *Evaluate = NULL;
     Subgraph *sgTrain = NULL, *sgEvaluate = NULL;
-        
+
     Train = va_arg(arg, Subgraph *);
     Evaluate = va_arg(arg, Subgraph *);
     optTransfer = va_arg(arg, TransferFunc);
-    
-    sgTrain = optTransfer(Train,a->x);
-    sgEvaluate = optTransfer(Evaluate,a->x);
+
+    sgTrain = optTransfer(Train, a->x);
+    sgEvaluate = optTransfer(Evaluate, a->x);
     opf_OPFTraining(sgTrain);
     opf_OPFClassifying(sgTrain, sgEvaluate);
     classification_error = opf_Accuracy(sgEvaluate);
-        
+
     DestroySubgraph(&sgTrain);
     DestroySubgraph(&sgEvaluate);
 
-    return 1-classification_error;
+    return 1 - classification_error;
 }
 
-double *HammingTransfer(double *feat, int n){
+double *HammingTransfer(double *feat, int n)
+{
     int i, j, k;
     double r;
 
-    for(j = 0; j < n; j++){
+    for (j = 0; j < n; j++)
+    {
         r = GenerateUniformRandomNumber(0, 1);
-        if(r < 1.0/(1.0+exp(-1*feat[j]))){
+        if (r < 1.0 / (1.0 + exp(-1 * feat[j])))
+        {
             feat[j] = 1;
-        }else{
+        }
+        else
+        {
             feat[j] = 0;
         }
     }
@@ -318,9 +384,10 @@ double *HammingTransfer(double *feat, int n){
 /* It executes Feature Selection with Hamming Distance
 Parameters: [Train, Evaluate, feats, optTransfer]
 optTransfer: Transfer function pointer */
-double FeatureSelectionHamming(Agent *a, va_list arg){
+double FeatureSelectionHamming(Agent *a, va_list arg)
+{
     double *input_vector, hamming_error;
-        
+
     input_vector = va_arg(arg, double *);
 
     hamming_error = Hamming_Distance(HammingTransfer(a->x, a->n), input_vector, a->n);

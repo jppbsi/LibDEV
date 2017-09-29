@@ -20,7 +20,7 @@ int main(int argc, char **argv)
     Train = ReadSubgraph(argv[1]);
     Evaluate = ReadSubgraph(argv[2]);
     Test = ReadSubgraph(argv[3]);
-    s = ReadSearchSpaceFromFile(argv[4], _PSO_);
+    s = ReadSearchSpaceFromFile(argv[4], _FPA_);
     optTransfer = S2TransferFunction;
 
     for (i = 0; i < Train->nfeats; i++)
@@ -30,13 +30,13 @@ int main(int argc, char **argv)
     }
 
     fprintf(stderr, "\nInitializing search space ... ");
-    InitializeSearchSpace(s, _PSO_);
+    InitializeSearchSpace(s, _FPA_);
     fprintf(stderr, "\nOk\n");
 
     fflush(stderr);
-    fprintf(stderr, "\nRunning PSO ... ");
+    fprintf(stderr, "\nRunning FPA ... ");
     gettimeofday(&tic, NULL);
-    runPSO(s, FeatureSelectionOPF, Train, Evaluate, optTransfer);
+    runFPA(s, FeatureSelectionOPF, Train, Evaluate, optTransfer);
     gettimeofday(&toc, NULL);
     fflush(stderr);
     fprintf(stderr, "\nOK\n");
@@ -52,9 +52,9 @@ int main(int argc, char **argv)
     newTrain = CreateSubgraphFromSelectedFeatures(Merge, s->g);
     newTest = CreateSubgraphFromSelectedFeatures(Test, s->g);
     fprintf(stderr, "\nTraining set\n");
-    WriteSubgraph(newTrain, "training.pso.dat");
+    WriteSubgraph(newTrain, "training.fpa.dat");
     fprintf(stderr, "\n\nTesting set\n");
-    WriteSubgraph(newTest, "testing.pso.dat");
+    WriteSubgraph(newTest, "testing.fpa.dat");
     fflush(stderr);
     fprintf(stderr, "\nOK\n");
 
@@ -97,7 +97,7 @@ int main(int argc, char **argv)
     fprintf(f, "%f %f\n", time_opt, time_classify);
     fclose(f);
 
-    DestroySearchSpace(&s, _PSO_);
+    DestroySearchSpace(&s, _FPA_);
 
     return 0;
 }

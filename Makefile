@@ -8,7 +8,7 @@ CC=gcc
 FLAGS=  -g -O0
 CFLAGS=''
 
-all: libdev OPFknn OPFcluster OPFpruning DBN TensorDBN DropoutDBN DropconnectDBN DBM TensorDBM DropoutDBM DropconnectDBM CombinatorialOPF FeatureSelectionOPF FeatureSelectionHamming RBM TensorRBM DropoutRBM DropconnectRBM DRBM DropoutDRBM GaussianDRBM DropoutGaussianDRBM EPNN GaussianRBM DropoutGaussianRBM LinearRegression LogisticRegression
+all: libdev OPFknn OPFcluster OPFpruning DBN TensorDBN DropoutDBN DropconnectDBN DBM TensorDBM DropoutDBM DropconnectDBM CombinatorialOPF FeatureSelectionOPF FeatureSelectionOPF_ABC FeatureSelectionOPF_AIWPSO FeatureSelectionOPF_BA FeatureSelectionOPF_BHA FeatureSelectionOPF_BSO FeatureSelectionOPF_CS FeatureSelectionOPF_FA FeatureSelectionOPF_FPA FeatureSelectionOPF_GP FeatureSelectionOPF_GSGP FeatureSelectionOPF_HS FeatureSelectionOPF_IHS FeatureSelectionOPF_MBO FeatureSelectionOPF_PSFHS FeatureSelectionOPF_WCA FeatureSelectionHamming RBM TensorRBM DropoutRBM DropconnectRBM DRBM DropoutDRBM GaussianDRBM DropoutGaussianDRBM EPNN GaussianRBM DropoutGaussianRBM LinearRegression LogisticRegression
 
 libdev: $(LIB)/libdev.a
 	echo "libdev.a built..."
@@ -119,6 +119,66 @@ CombinatorialOPF: examples/FeatureSelection/CombinatorialOPF.c
 
 FeatureSelectionOPF: examples/FeatureSelection/FeatureSelectionOPF.c
 	$(CC) $(FLAGS) examples/FeatureSelection/FeatureSelectionOPF.c -o examples/bin/FeatureSelectionOPF -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt -lgsl -lgslcblas -lm;
+
+FeatureSelectionOPF_ABC: examples/FeatureSelection/FeatureSelectionOPF_ABC.c
+	$(CC) $(FLAGS) examples/FeatureSelection/FeatureSelectionOPF_ABC.c -o examples/bin/FeatureSelectionOPF_ABC -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt -lgsl -lgslcblas -lm;
+
+FeatureSelectionOPF_AIWPSO: examples/FeatureSelection/FeatureSelectionOPF_AIWPSO.c
+	$(CC) $(FLAGS) examples/FeatureSelection/FeatureSelectionOPF_AIWPSO.c -o examples/bin/FeatureSelectionOPF_AIWPSO -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt -lgsl -lgslcblas -lm;
+
+FeatureSelectionOPF_BA: examples/FeatureSelection/FeatureSelectionOPF_BA.c
+	$(CC) $(FLAGS) examples/FeatureSelection/FeatureSelectionOPF_BA.c -o examples/bin/FeatureSelectionOPF_BA -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt -lgsl -lgslcblas -lm;
+
+FeatureSelectionOPF_BHA: examples/FeatureSelection/FeatureSelectionOPF_BHA.c
+	$(CC) $(FLAGS) examples/FeatureSelection/FeatureSelectionOPF_BHA.c -o examples/bin/FeatureSelectionOPF_BHA -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt -lgsl -lgslcblas -lm;
+
+FeatureSelectionOPF_BSO: examples/FeatureSelection/FeatureSelectionOPF_BSO.c
+	$(CC) $(FLAGS) examples/FeatureSelection/FeatureSelectionOPF_BSO.c -o examples/bin/FeatureSelectionOPF_BSO -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt -lgsl -lgslcblas -lm;
+
+FeatureSelectionOPF_CS: examples/FeatureSelection/FeatureSelectionOPF_CS.c
+	$(CC) $(FLAGS) examples/FeatureSelection/FeatureSelectionOPF_CS.c -o examples/bin/FeatureSelectionOPF_CS -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt -lgsl -lgslcblas -lm;
+
+FeatureSelectionOPF_FA: examples/FeatureSelection/FeatureSelectionOPF_FA.c
+	$(CC) $(FLAGS) examples/FeatureSelection/FeatureSelectionOPF_FA.c -o examples/bin/FeatureSelectionOPF_FA -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt -lgsl -lgslcblas -lm;
+
+FeatureSelectionOPF_FPA: examples/FeatureSelection/FeatureSelectionOPF_FPA.c
+	$(CC) $(FLAGS) examples/FeatureSelection/FeatureSelectionOPF_FPA.c -o examples/bin/FeatureSelectionOPF_FPA -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt -lgsl -lgslcblas -lm;
+
+FeatureSelectionOPF_GP: examples/FeatureSelection/FeatureSelectionOPF_GP.c
+	$(CC) $(FLAGS) examples/FeatureSelection/FeatureSelectionOPF_GP.c -o examples/bin/FeatureSelectionOPF_GP -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt -lgsl -lgslcblas -lm;
+
+FeatureSelectionOPF_GSGP: examples/FeatureSelection/FeatureSelectionOPF_GSGP.c
+	$(CC) $(FLAGS) examples/FeatureSelection/FeatureSelectionOPF_GSGP.c -o examples/bin/FeatureSelectionOPF_GSGP -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt -lgsl -lgslcblas -lm;
+
+FeatureSelectionOPF_HS: examples/FeatureSelection/FeatureSelectionOPF_HS.c
+	$(CC) $(FLAGS) examples/FeatureSelection/FeatureSelectionOPF_HS.c -o examples/bin/FeatureSelectionOPF_HS -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt -lgsl -lgslcblas -lm;
+
+FeatureSelectionOPF_IHS: examples/FeatureSelection/FeatureSelectionOPF_IHS.c
+	$(CC) $(FLAGS) examples/FeatureSelection/FeatureSelectionOPF_IHS.c -o examples/bin/FeatureSelectionOPF_IHS -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt -lgsl -lgslcblas -lm;
+
+FeatureSelectionOPF_MBO: examples/FeatureSelection/FeatureSelectionOPF_MBO.c
+	$(CC) $(FLAGS) examples/FeatureSelection/FeatureSelectionOPF_MBO.c -o examples/bin/FeatureSelectionOPF_MBO -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt -lgsl -lgslcblas -lm;
+
+FeatureSelectionOPF_PSFHS: examples/FeatureSelection/FeatureSelectionOPF_PSFHS.c
+	$(CC) $(FLAGS) examples/FeatureSelection/FeatureSelectionOPF_PSFHS.c -o examples/bin/FeatureSelectionOPF_PSFHS -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt -lgsl -lgslcblas -lm;
+
+FeatureSelectionOPF_WCA: examples/FeatureSelection/FeatureSelectionOPF_WCA.c
+	$(CC) $(FLAGS) examples/FeatureSelection/FeatureSelectionOPF_WCA.c -o examples/bin/FeatureSelectionOPF_WCA -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
     -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt -lgsl -lgslcblas -lm;
 
 FeatureSelectionHamming: examples/FeatureSelection/FeatureSelectionHamming.c

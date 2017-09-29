@@ -34,9 +34,9 @@ int main(int argc, char **argv)
     fprintf(stderr, "\nOk\n");
 
     fflush(stderr);
-    fprintf(stderr, "\nRunning PSO ... ");
+    fprintf(stderr, "\nRunning AIWPSO ... ");
     gettimeofday(&tic, NULL);
-    runPSO(s, FeatureSelectionOPF, Train, Evaluate, optTransfer);
+    runAIWPSO(s, FeatureSelectionOPF, Train, Evaluate, optTransfer);
     gettimeofday(&toc, NULL);
     fflush(stderr);
     fprintf(stderr, "\nOK\n");
@@ -52,9 +52,9 @@ int main(int argc, char **argv)
     newTrain = CreateSubgraphFromSelectedFeatures(Merge, s->g);
     newTest = CreateSubgraphFromSelectedFeatures(Test, s->g);
     fprintf(stderr, "\nTraining set\n");
-    WriteSubgraph(newTrain, "training.pso.dat");
+    WriteSubgraph(newTrain, "training.aiwpso.dat");
     fprintf(stderr, "\n\nTesting set\n");
-    WriteSubgraph(newTest, "testing.pso.dat");
+    WriteSubgraph(newTest, "testing.aiwpso.dat");
     fflush(stderr);
     fprintf(stderr, "\nOK\n");
 

@@ -21,6 +21,10 @@ extern "C" {
 #include "gp.h"
 #include "bha.h"
 #include "hs.h"
+#include "mbo.h"
+#include "bso.h"
+#include "wca.h"
+#include "abc.h"
 
 #include "_opf_.h"
 #include "_dbn_.h"
