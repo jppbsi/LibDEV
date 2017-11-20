@@ -25,6 +25,7 @@ extern "C" {
 #include "bso.h"
 #include "wca.h"
 #include "abc.h"
+#include "loa.h"
 
 #include "_opf_.h"
 #include "_dbn_.h"
