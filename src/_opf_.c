@@ -251,7 +251,7 @@ SearchSpace *CreateInitializeSearchSpaceOPF(Subgraph *sg, float perc, int opt_id
    // For each agent... 
    int dvar;
    for (k = 0; k < s->m; k++) {
-       printf("Agent %d...\n", k);
+       //printf("Agent %d...\n", k);
       // Random selection of the samples.
       // Given a class 'i'...
       dvar = 0;
@@ -261,7 +261,7 @@ SearchSpace *CreateInitializeSearchSpaceOPF(Subgraph *sg, float perc, int opt_id
          for (j = 0; j < nelems[i]; j++) {
             do {
                el = RandomInteger(0, classes_list[i].nelems - 1);
-               printf("\t[%d][%d] - [%d]\n", i, j, el);
+               //printf("\t[%d][%d] - [%d]\n", i, j, el);
             } while(classes_list[i].flag[el] == 1);
 
             s->a[k]->x[dvar] = classes_list[i].position[el];
