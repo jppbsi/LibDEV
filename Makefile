@@ -3,12 +3,18 @@ INCLUDE=./include
 SRC=./src
 OBJ=./obj
 
+OPF_DIR=../LibOPF
+OPT_DIR=../LibOPT
+LIBDEEP_DIR=../LibDEEP
+
 CC=gcc
 
 FLAGS=  -g -O0
 CFLAGS=''
 
-all: libdev OPFknn OPFcluster OPFpruning DBN TensorDBN DropoutDBN DropconnectDBN DBM TensorDBM DropoutDBM DropconnectDBM CombinatorialOPF FeatureSelectionOPF FeatureSelectionOPF_ABC FeatureSelectionOPF_AIWPSO FeatureSelectionOPF_BA FeatureSelectionOPF_BHA FeatureSelectionOPF_BSO FeatureSelectionOPF_CS FeatureSelectionOPF_FA FeatureSelectionOPF_FPA FeatureSelectionOPF_GP FeatureSelectionOPF_GSGP FeatureSelectionOPF_HS FeatureSelectionOPF_IHS FeatureSelectionOPF_MBO FeatureSelectionOPF_PSFHS FeatureSelectionOPF_WCA FeatureSelectionHamming RBM TensorRBM DropoutRBM DropconnectRBM DRBM DropoutDRBM GaussianDRBM DropoutGaussianDRBM EPNN GaussianRBM DropoutGaussianRBM LinearRegression LogisticRegression
+all: libdev OPFknn OPFcluster OPFpruning DBN DropoutDBN DropconnectDBN DBM DropoutDBM DropconnectDBM CombinatorialOPF FeatureSelectionOPF FeatureSelectionOPF_ABC FeatureSelectionOPF_AIWPSO FeatureSelectionOPF_BA FeatureSelectionOPF_BHA FeatureSelectionOPF_BSO FeatureSelectionOPF_CS FeatureSelectionOPF_FA FeatureSelectionOPF_FPA FeatureSelectionOPF_GP FeatureSelectionOPF_GSGP FeatureSelectionOPF_HS FeatureSelectionOPF_IHS FeatureSelectionOPF_MBO FeatureSelectionOPF_PSFHS FeatureSelectionOPF_WCA FeatureSelectionHamming RBM DropoutRBM DropconnectRBM DRBM DropoutDRBM GaussianDRBM DropoutGaussianDRBM EPNN GaussianRBM DropoutGaussianRBM LinearRegression LogisticRegression
+
+#TensorDBN TensorDBM TensorRBM
 
 libdev: $(LIB)/libdev.a
 	echo "libdev.a built..."

@@ -180,4 +180,95 @@ double OPFpruning_ensemble(Agent *a, va_list arg)
 
     return (1 / acc);
 }
+
+//-------------------------------------------------------
+// Changes for the CEC '19 paper.
+
+/* It initializes an allocated search space
+Parameters:
+sg: training subgraph
+perc: percentage of samples tobe used as prototypes
+opt_id: identifier of the optimization technique
+m: number of agents */
+SearchSpace *CreateInitializeSearchSpaceOPF(Subgraph *sg, float perc, int opt_id, int m){
+
+   int i, j, k, el;
+
+
+   // Counting the number of samples of each class.
+   int *labels = AllocIntArray(sg->nlabels + 1);
+
+   for (i = 0; i < sg->nnodes; i++) {
+      labels[sg->node[i].truelabel]++;
+   }
+
+
+   // Allocates memory space for each class list
+   // according to the number of samples.
+   Class_list classes_list[sg->nlabels+1];
+
+   for (i = 1; i <= sg->nlabels; i++) {
+      classes_list[i].nelems = labels[i];
+      classes_list[i].index = AllocIntArray(labels[i]);
+      classes_list[i].position = AllocIntArray(labels[i]);
+      classes_list[i].flag = AllocIntArray(labels[i]);
+   }
+
+
+   // Populates the lists.
+   int *list_position = AllocIntArray(sg->nlabels + 1); // It only stores the current position on each list.
+
+   for (i = 0; i < sg->nnodes; i++) {
+      int curr_pos = list_position[sg->node[i].truelabel]; // current position on the list.
+
+      classes_list[sg->node[i].truelabel].index[curr_pos] = i;
+      classes_list[sg->node[i].truelabel].position[curr_pos] = sg->node[i].position;
+
+      list_position[sg->node[i].truelabel]++;
+   }
+
+
+   // Computes the number of samples to be taken
+   // as prototypes for each class.
+   int n = 0; // number of decision variables.
+   int *nelems = AllocIntArray(sg->nlabels + 1);
+
+   for (i = 1; i <= sg->nlabels; i++) {
+      nelems[i] = MAX((int)(perc * labels[i]), 1);
+      n += nelems[i];
+   }
+
+
+   // Proper serach sace initialization
+   SearchSpace *s = NULL;
+   s = CreateSearchSpace(m, n, _PSO_);
+
+   // For each agent... 
+   int dvar;
+   for (k = 0; k < s->m; k++) {
+      // Random selection of the samples.
+      // Given a class 'i'...
+      dvar = 0;
+
+      for (i = 1; i <= sg->nlabels; i++) {
+         // Select 'nelems[i]' samples.
+         for (j = 0; j < nelems[i]; j++) {
+            do {
+               el = RandomInteger(0, nelems[i] - 1);
+            } while(classes_list[i].flag[el] == 1);
+
+            s->a[k]->x[dvar] = classes_list[i].position[el];
+            classes_list[i].flag[el] = 1;
+            dvar++;
+         }
+      }
+   }
+
+   return s;
+
+}
+
+//-------------------------------------------------------
+
+
 /***********************************************/
