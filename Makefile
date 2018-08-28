@@ -12,7 +12,7 @@ CC=gcc
 FLAGS=  -g -O0
 CFLAGS=''
 
-all: libdev OPFknn OPFcluster OPFpruning DBN DropoutDBN DropconnectDBN DBM DropoutDBM DropconnectDBM CombinatorialOPF FeatureSelectionOPF FeatureSelectionOPF_ABC FeatureSelectionOPF_AIWPSO FeatureSelectionOPF_BA FeatureSelectionOPF_BHA FeatureSelectionOPF_BSO FeatureSelectionOPF_CS FeatureSelectionOPF_FA FeatureSelectionOPF_FPA FeatureSelectionOPF_GP FeatureSelectionOPF_GSGP FeatureSelectionOPF_HS FeatureSelectionOPF_IHS FeatureSelectionOPF_MBO FeatureSelectionOPF_PSFHS FeatureSelectionOPF_WCA FeatureSelectionHamming RBM DropoutRBM DropconnectRBM DRBM DropoutDRBM GaussianDRBM DropoutGaussianDRBM EPNN GaussianRBM DropoutGaussianRBM LinearRegression LogisticRegression
+all: libdev OPFknn OPFcluster OPFpruning DBN DropoutDBN DropconnectDBN DBM DropoutDBM DropconnectDBM CombinatorialOPF FeatureSelectionOPF FeatureSelectionOPF_ABC FeatureSelectionOPF_AIWPSO FeatureSelectionOPF_BA FeatureSelectionOPF_BHA FeatureSelectionOPF_BSO FeatureSelectionOPF_CS FeatureSelectionOPF_FA FeatureSelectionOPF_FPA FeatureSelectionOPF_GP FeatureSelectionOPF_GSGP FeatureSelectionOPF_HS FeatureSelectionOPF_IHS FeatureSelectionOPF_MBO FeatureSelectionOPF_PSFHS FeatureSelectionOPF_WCA FeatureSelectionHamming RBM DropoutRBM DropconnectRBM DRBM DropoutDRBM GaussianDRBM DropoutGaussianDRBM EPNN GaussianRBM DropoutGaussianRBM LinearRegression LogisticRegression  OPFteste
 
 #TensorDBN TensorDBM TensorRBM
 
@@ -238,6 +238,10 @@ LinearRegression: examples/LinearRegression/LinearRegression.c
 LogisticRegression: examples/LogisticRegression/LogisticRegression.c
 	$(CC) $(FLAGS) examples/LogisticRegression/LogisticRegression.c -o examples/bin/LogisticRegression -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
     -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt -lgsl -lgslcblas -lm;
+
+OPFteste: examples/OPF/OPFteste.c
+	$(CC) $(FLAGS) examples/OPF/OPFteste.c -o examples/bin/OPFteste -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I $(INCLUDE) -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lOPF -lDeep -lopt -lm;
 
 
 clean:
