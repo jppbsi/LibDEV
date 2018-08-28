@@ -241,7 +241,7 @@ SearchSpace *CreateInitializeSearchSpaceOPF(Subgraph *sg, float perc, int opt_id
 
    // Proper serach sace initialization
    SearchSpace *s = NULL;
-   s = CreateSearchSpace(m, n, _PSO_);
+   s = CreateSearchSpace(m, n, opt_id);
 
    // For each agent... 
    int dvar;
