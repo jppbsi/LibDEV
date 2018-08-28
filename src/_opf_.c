@@ -264,7 +264,10 @@ SearchSpace *CreateInitializeSearchSpaceOPF(Subgraph *sg, float perc, int opt_id
                //printf("\t[%d][%d] - [%d]\n", i, j, el);
             } while(classes_list[i].flag[el] == 1);
 
-            s->a[k]->x[dvar] = classes_list[i].position[el];
+            // Sets decision variable value.
+            s->a[k]->x[dvar] = classes_list[i].index[el];
+            //s->a[k]->x[dvar] = classes_list[i].position[el];
+
             classes_list[i].flag[el] = 1;
             dvar++;
          }
@@ -274,6 +277,17 @@ SearchSpace *CreateInitializeSearchSpaceOPF(Subgraph *sg, float perc, int opt_id
          for (j = 0; j < nelems[i]; j++) {
             classes_list[i].flag[j] = 0;
          }
+      }
+   }
+
+   // Setting 'LOWER' and 'UPPER' bounds of each decision variable.
+   dvar = 0;
+   for (i = 1; i <= sg->nlabels; i++) {
+      // For the position concerning class 'i'...
+      for (j = 0; j < nelems[i]; j++) {
+         s->LB[dvar] = 0;
+         s->UB[dvar] = nelems[i] - 1;
+         dvar++;
       }
    }
 
