@@ -187,10 +187,11 @@ double OPFpruning_ensemble(Agent *a, va_list arg)
 /* It initializes an allocated search space
 Parameters:
 sg: training subgraph
+classes_list: list of lists of elements of each class.
 perc: percentage of samples tobe used as prototypes
 opt_id: identifier of the optimization technique
 m: number of agents */
-SearchSpace *CreateInitializeSearchSpaceOPF(Subgraph *sg, float perc, int opt_id, int m){
+SearchSpace *CreateInitializeSearchSpaceOPF(Subgraph *sg, Class_list *classes_list, float perc, int opt_id, int m){
 
    int i, j, k, el;
 
@@ -206,7 +207,8 @@ SearchSpace *CreateInitializeSearchSpaceOPF(Subgraph *sg, float perc, int opt_id
    // Allocates memory space for each class list
    // according to the number of samples.
    printf("Allocating memory space for each class list. # classes found:%d \n", sg->nlabels);
-   Class_list classes_list[sg->nlabels+1];
+   //Class_list classes_list[sg->nlabels+1];
+   classes_list = malloc(sizeof(Class_list)*(sg->nlabels+1));
 
    for (i = 1; i <= sg->nlabels; i++) {
       classes_list[i].nelems = labels[i];
@@ -238,6 +240,8 @@ SearchSpace *CreateInitializeSearchSpaceOPF(Subgraph *sg, float perc, int opt_id
 
    for (i = 1; i <= sg->nlabels; i++) {
       nelems[i] = MAX((int)(perc * labels[i]), 1);
+
+      classes_list[i].nprots = nelems[i]; // Sets the number of prototypes for the given class.
       n += nelems[i];
       printf("Class %d: %d\n", i, nelems[i]);
    }
@@ -295,6 +299,108 @@ SearchSpace *CreateInitializeSearchSpaceOPF(Subgraph *sg, float perc, int opt_id
 
    return s;
 
+}
+
+// Function to set the prototypes.
+void opt_OPFPrototypes(Subgraph *sg, Class_list *classes_list, Agent *a)
+{
+      int i, j, pos = 0;
+      int node_idx_list;
+      int node_idx;
+
+      for (i = 1; i <= sg->nlabels; i++) {
+         for (j = 0; j < classes_list[i].nprots; j++) {
+            node_idx_list = a->x[pos]; // Gets the position in the class list.
+            node_idx = classes_list[i].index[node_idx_list];// Gets the index in the subgraph.
+
+            sg->node[node_idx].status = opf_PROTOTYPE;
+
+            pos++;
+         }
+      }  
+}
+
+void opt_OPFTraining(Subgraph *sg, Class_list *classes_list, Agent *a)
+{
+  int p, q, i;
+  float tmp, weight;
+  RealHeap *Q = NULL;
+  float *pathval = NULL;
+
+  // compute optimum prototypes
+  opt_OPFPrototypes(sg, classes_list, a);
+
+  // initialization
+  pathval = AllocFloatArray(sg->nnodes);
+
+  Q = CreateRealHeap(sg->nnodes, pathval);
+
+  for (p = 0; p < sg->nnodes; p++)
+  {
+    if (sg->node[p].status == opf_PROTOTYPE)
+    {
+      sg->node[p].pred = NIL;
+      pathval[p] = 0;
+      sg->node[p].label = sg->node[p].truelabel;
+      InsertRealHeap(Q, p);
+    }
+    else
+    { // non-prototypes
+      pathval[p] = FLT_MAX;
+    }
+  }
+
+  // IFT with fmax
+  i = 0;
+  while (!IsEmptyRealHeap(Q))
+  {
+    RemoveRealHeap(Q, &p);
+
+    sg->ordered_list_of_nodes[i] = p;
+    i++;
+    sg->node[p].pathval = pathval[p];
+
+    for (q = 0; q < sg->nnodes; q++)
+    {
+      if (p != q)
+      {
+        if (pathval[p] < pathval[q])
+        {
+          if (!opf_PrecomputedDistance)
+            weight = opf_ArcWeight(sg->node[p].feat, sg->node[q].feat, sg->nfeats);
+          else
+            weight = opf_DistanceValue[sg->node[p].position][sg->node[q].position];
+          tmp = MAX(pathval[p], weight);
+          if (tmp < pathval[q])
+          {
+            sg->node[q].pred = p;
+            sg->node[q].label = sg->node[p].label;
+            UpdateRealHeap(Q, q, tmp);
+          }
+        }
+      }
+    }
+  }
+
+  DestroyRealHeap(&Q);
+  free(pathval);
+}
+
+double OPFPrototypes_Optimization(Agent *a, va_list arg)
+{
+    double error;
+    Subgraph *Train = NULL, *Val = NULL;
+    Class_list *classes_list = NULL;
+
+    Train = va_arg(arg, Subgraph *);
+    Val = va_arg(arg, Subgraph *);
+    classes_list = va_arg(arg, Class_list *);
+
+    opt_OPFTraining(Train, classes_list, a);
+    opf_OPFClassifying(Train, Val);
+    error = (double)opf_Accuracy(Val);
+
+    return 1 / error;
 }
 
 //-------------------------------------------------------

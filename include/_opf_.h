@@ -18,13 +18,20 @@ double OPFpruning_ensemble(Agent *a, va_list arg); /* It executes a OPF Ensemble
 typedef struct Class_list_{
 
     int nelems; // number of elements on the list.
+    int nprots; // number of prototypes in the given class.
     int *index; // Index of the node in the subgraph.
     int *position; // Position of the node in the full graph.
     int *flag; // (0) not used or (1) used.
 
 }Class_list;
 
-SearchSpace *CreateInitializeSearchSpaceOPF(Subgraph *sg, float perc, int opt_id, int m);
+SearchSpace *CreateInitializeSearchSpaceOPF(Subgraph *sg, Class_list *classes_list, float perc, int opt_id, int m);
+
+void opt_OPFPrototypes(Subgraph *sg, Class_list *classes_list, Agent *a);
+
+void opt_OPFTraining(Subgraph *sg, Class_list *classes_list, Agent *a);
+
+double OPFPrototypes_Optimization(Agent *a, va_list arg);
 
 //-------------------------------------------------------
 

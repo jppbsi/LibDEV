@@ -12,9 +12,10 @@ int main(int argc, char **argv)
     int m = 15;
     int i, j;
 
+    Class_list *classes_list;
     Subgraph *Train = ReadSubgraph(argv[1]);
 
-    SearchSpace *s = CreateInitializeSearchSpaceOPF(Train, perc, _PSO_, m);
+    SearchSpace *s = CreateInitializeSearchSpaceOPF(Train, classes_list, perc, _PSO_, m);
 
     for (i = 0; i < s->m; i++){
        printf("Agent %d:\n", i);
