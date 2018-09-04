@@ -197,29 +197,29 @@ SearchSpace *CreateInitializeSearchSpaceOPF(Subgraph *sg, Class_list *classes_li
 
 
    // Counting the number of samples of each class.
-   int *labels = AllocIntArray(sg->nlabels + 1);
+   int *nelems = AllocIntArray(sg->nlabels + 1);
 
    for (i = 0; i < sg->nnodes; i++) {
-      labels[sg->node[i].truelabel]++;
+      nelems[sg->node[i].truelabel]++;
    }
 
 
    // Allocates memory space for each class list
    // according to the number of samples.
-   printf("Allocating memory space for each class list. # classes found:%d \n", sg->nlabels);
+   printf("- Allocating memory space for each class list. # classes found: %d \n", sg->nlabels);
    //Class_list classes_list[sg->nlabels+1];
-   classes_list = malloc(sizeof(Class_list)*(sg->nlabels+1));
+   //classes_list = malloc(sizeof(Class_list)*(sg->nlabels+1));
 
    for (i = 1; i <= sg->nlabels; i++) {
-      classes_list[i].nelems = labels[i];
-      classes_list[i].index = AllocIntArray(labels[i]);
-      classes_list[i].position = AllocIntArray(labels[i]);
-      classes_list[i].flag = AllocIntArray(labels[i]);
+      classes_list[i].nelems = nelems[i];
+      classes_list[i].index = AllocIntArray(nelems[i]);
+      classes_list[i].position = AllocIntArray(nelems[i]);
+      classes_list[i].flag = AllocIntArray(nelems[i]);
    }
 
 
    // Populates the lists.
-   printf("Populating lists.\n");
+   printf("- Populating lists.\n");
    int *list_position = AllocIntArray(sg->nlabels + 1); // It only stores the current position on each list.
 
    for (i = 0; i < sg->nnodes; i++) {
@@ -235,20 +235,19 @@ SearchSpace *CreateInitializeSearchSpaceOPF(Subgraph *sg, Class_list *classes_li
    // Computes the number of samples to be taken
    // as prototypes for each class.
    int n = 0; // number of decision variables.
-   printf("Computing number of prototypes for each class...\n");
-   int *nelems = AllocIntArray(sg->nlabels + 1);
+   printf("- Computing number of prototypes for each class. Using %.2f of samples as prototypes...\n", perc);
+   int *nprots = AllocIntArray(sg->nlabels + 1);
 
    for (i = 1; i <= sg->nlabels; i++) {
-      nelems[i] = MAX((int)(perc * labels[i]), 1);
+      nprots[i] = MAX((int)(perc * classes_list[i].nelems), 1);
 
-      classes_list[i].nprots = nelems[i]; // Sets the number of prototypes for the given class.
-      n += nelems[i];
-      printf("Class %d: %d\n", i, nelems[i]);
+      classes_list[i].nprots = nprots[i]; // Sets the number of prototypes for the given class.
+      n += nprots[i];
    }
 
 
    // Proper search space initialization
-   printf("Proper search space initialization...\n");
+   printf("- Proper search space initialization...\n");
    SearchSpace *s = NULL;
    s = CreateSearchSpace(m, n, opt_id);
 
@@ -261,15 +260,14 @@ SearchSpace *CreateInitializeSearchSpaceOPF(Subgraph *sg, Class_list *classes_li
       dvar = 0;
 
       for (i = 1; i <= sg->nlabels; i++) {
-         // Select 'nelems[i]' samples.
-         for (j = 0; j < nelems[i]; j++) {
+         // Select 'nprots[i]' samples.
+         for (j = 0; j < classes_list[i].nprots; j++) {
             do {
                el = RandomInteger(0, classes_list[i].nelems - 1);
-               //printf("\t[%d][%d] - [%d]\n", i, j, el);
             } while(classes_list[i].flag[el] == 1);
 
             // Sets decision variable value.
-            s->a[k]->x[dvar] = classes_list[i].index[el];
+            s->a[k]->x[dvar] = (double)el;
             //s->a[k]->x[dvar] = classes_list[i].position[el];
 
             classes_list[i].flag[el] = 1;
@@ -278,7 +276,7 @@ SearchSpace *CreateInitializeSearchSpaceOPF(Subgraph *sg, Class_list *classes_li
       }
 
       for (i = 1; i <= sg->nlabels; i++) {
-         for (j = 0; j < nelems[i]; j++) {
+         for (j = 0; j < classes_list[i].nelems; j++) {
             classes_list[i].flag[j] = 0;
          }
       }
@@ -288,9 +286,9 @@ SearchSpace *CreateInitializeSearchSpaceOPF(Subgraph *sg, Class_list *classes_li
    dvar = 0;
    for (i = 1; i <= sg->nlabels; i++) {
       // For the position concerning class 'i'...
-      for (j = 0; j < nelems[i]; j++) {
-         s->LB[dvar] = 0;
-         s->UB[dvar] = nelems[i] - 1;
+      for (j = 0; j < classes_list[i].nprots; j++) {
+         s->LB[dvar] = 0.0;
+         s->UB[dvar] = (double)classes_list[i].nelems - 1;
          dvar++;
       }
    }
@@ -304,13 +302,14 @@ SearchSpace *CreateInitializeSearchSpaceOPF(Subgraph *sg, Class_list *classes_li
 // Function to set the prototypes.
 void opt_OPFPrototypes(Subgraph *sg, Class_list *classes_list, Agent *a)
 {
-      int i, j, pos = 0;
+      int i, j, pos;
       int node_idx_list;
       int node_idx;
 
       for (i = 1; i <= sg->nlabels; i++) {
+	 pos = 0;
          for (j = 0; j < classes_list[i].nprots; j++) {
-            node_idx_list = a->x[pos]; // Gets the position in the class list.
+            node_idx_list = (int)a->x[pos]; // Gets the position in the class list.
             node_idx = classes_list[i].index[node_idx_list];// Gets the index in the subgraph.
 
             sg->node[node_idx].status = opf_PROTOTYPE;
