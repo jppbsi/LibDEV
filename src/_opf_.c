@@ -206,7 +206,7 @@ SearchSpace *CreateInitializeSearchSpaceOPF(Subgraph *sg, Class_list *classes_li
 
    // Allocates memory space for each class list
    // according to the number of samples.
-   printf("- Allocating memory space for each class list. # classes found: %d \n", sg->nlabels);
+   printf("\n- Allocating memory space for each class list. # classes found: %d \n", sg->nlabels);
    //Class_list classes_list[sg->nlabels+1];
    //classes_list = malloc(sizeof(Class_list)*(sg->nlabels+1));
 
@@ -240,6 +240,8 @@ SearchSpace *CreateInitializeSearchSpaceOPF(Subgraph *sg, Class_list *classes_li
 
    for (i = 1; i <= sg->nlabels; i++) {
       nprots[i] = MAX((int)(perc * classes_list[i].nelems), 1);
+
+	  printf("# prototypes for class %d: %d of %d samples\n", i, nprots[i], classes_list[i].nelems);
 
       classes_list[i].nprots = nprots[i]; // Sets the number of prototypes for the given class.
       n += nprots[i];
@@ -326,6 +328,11 @@ void opt_OPFTraining(Subgraph *sg, Class_list *classes_list, Agent *a)
   RealHeap *Q = NULL;
   float *pathval = NULL;
 
+  // Insert code to reset opf_PROTOTYPE flag.
+  for (p = 0; p < sg->nnodes; p++)
+  {
+    sg->node[p].status = 0;
+  }
   // compute optimum prototypes
   opt_OPFPrototypes(sg, classes_list, a);
 
@@ -381,6 +388,25 @@ void opt_OPFTraining(Subgraph *sg, Class_list *classes_list, Agent *a)
     }
   }
 
+/*  int counter[sg->nlabels];
+  int non_prot = 0;
+  // print number of portotypes of each class.
+  for (p = 0; p < sg->nlabels; p++) {
+    counter[p] = 0;
+  }
+  for (p = 0; p < sg->nnodes; p++) {
+    if (sg->node[p].status==opf_PROTOTYPE){
+      counter[sg->node[p].truelabel-1] += 1;
+    } else {
+      non_prot++;
+    }
+  }
+
+  for (p = 0; p < sg->nlabels; p++) {
+    printf("\n# prototypes for class %d: %d", (p+1), counter[p]);
+  }
+  printf("\n# NON-prototypes: %d\n\n", non_prot);*/
+
   DestroyRealHeap(&Q);
   free(pathval);
 }
@@ -398,6 +424,8 @@ double OPFPrototypes_Optimization(Agent *a, va_list arg)
     opt_OPFTraining(Train, classes_list, a);
     opf_OPFClassifying(Train, Val);
     error = (double)opf_Accuracy(Val);
+
+    //printf("- Error: %lf\n", error);
 
     return 1 / error;
 }
