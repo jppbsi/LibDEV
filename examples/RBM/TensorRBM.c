@@ -31,10 +31,10 @@ int main(int argc, char **argv)
     eta_bound[0] = s->LB[1];
     eta_bound[1] = s->UB[1];
 
-    s->t_g = AllocateTensor(s->n, _QUATERNION_);
+    s->t_g = CreateTensor(s->n, _QUATERNION_);
     for (i = 0; i < s->m; i++)
     {
-        s->a[i]->t = AllocateTensor(s->n, _QUATERNION_); /* It allocates a new tensor for each agent */
+        s->a[i]->t = CreateTensor(s->n, _QUATERNION_); /* It allocates a new tensor for each agent */
     }
 
     fprintf(stderr, "\nInitializing search space ... ");
@@ -91,10 +91,10 @@ int main(int argc, char **argv)
     fclose(f);
     fprintf(stderr, "Ok!\n");
 
-    DeallocateTensor(&s->t_g, s->n);
+    DestroyTensor(&s->t_g, s->n);
     for (i = 0; i < s->m; i++)
     {
-        DeallocateTensor(&s->a[i]->t, s->n); /* It deallocates the tensor for each agent */
+        DestroyTensor(&s->a[i]->t, s->n); /* It deallocates the tensor for each agent */
     }
 
     free(eta_bound);
