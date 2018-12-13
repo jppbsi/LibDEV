@@ -25,8 +25,8 @@ int main(int argc, char **argv)
 
     for (i = 0; i < Train->nfeats; i++)
     {
-        s->LB[i] = 0;
-        s->UB[i] = 1;
+        s->LB[i] = -20;
+        s->LB[i] = 20;
     }
 
     fprintf(stderr, "\nInitializing search space ... ");
