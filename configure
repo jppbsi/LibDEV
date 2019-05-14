@@ -1,0 +1,39 @@
+#!/bin/bash
+
+########## Checking the other libraries Enviroment Variables ##########
+exit_status=0
+
+if [ $OPT_DIR ] 
+then 
+    echo "OPT_DIR:... OK!"
+else
+    tput setaf 1; echo "ERROR: You should configure and compile LibOPT first."; tput sgr0
+    exit_status=1
+fi 
+
+if [ $LIBDEEP_DIR ] 
+then 
+    echo "LIBDEEP_DIR:... OK!"
+else
+    tput setaf 1; echo "ERROR: You should configure and compile LibDEEP first."; tput sgr0
+    exit_status=1
+fi 
+
+if [ $OPF_DIR ] 
+then 
+    echo "OPF_DIR:... OK!"
+else
+    tput setaf 1; echo "ERROR: You should configure and compile LibOPF first."; tput sgr0
+    exit_status=1
+fi 
+
+if [ $exit_status == 1 ] 
+then 
+    echo "Exiting due to the previous errors..."
+    exit
+    
+else
+    echo "All Dependencies OK! Enjoy LibDEV!"
+fi 
+####################################################
+
