@@ -8,7 +8,7 @@ CC=gcc
 FLAGS=  -g -O0
 CFLAGS=''
 
-all: libdev OPFknn OPFcluster OPFpruning DBN TensorDBN DropoutDBN DropconnectDBN DBM TensorDBM DropoutDBM DropconnectDBM CombinatorialOPF FeatureSelectionOPF FeatureSelectionOPF_ABC FeatureSelectionOPF_AIWPSO FeatureSelectionOPF_BA FeatureSelectionOPF_BHA FeatureSelectionOPF_BSO FeatureSelectionOPF_CS FeatureSelectionOPF_FA FeatureSelectionOPF_FPA FeatureSelectionOPF_GP FeatureSelectionOPF_GSGP FeatureSelectionOPF_HS FeatureSelectionOPF_IHS FeatureSelectionOPF_MBO FeatureSelectionOPF_PSFHS FeatureSelectionOPF_WCA FeatureSelectionHamming RBM TensorRBM DropoutRBM DropconnectRBM DRBM DropoutDRBM GaussianDRBM DropoutGaussianDRBM EPNN GaussianRBM DropoutGaussianRBM LinearRegression LogisticRegression
+all: libdev OPFknn OPFcluster OPFpruning DBN TensorDBN DropoutDBN DropconnectDBN DBM TensorDBM DropoutDBM DropconnectDBM CombinatorialOPF FeatureSelectionOPF FeatureSelectionOPF_ABC FeatureSelectionOPF_AIWPSO FeatureSelectionOPF_BA FeatureSelectionOPF_BHA FeatureSelectionOPF_BSO FeatureSelectionOPF_CS FeatureSelectionOPF_FA FeatureSelectionOPF_FPA FeatureSelectionOPF_GA FeatureSelectionOPF_GP FeatureSelectionOPF_GSGP FeatureSelectionOPF_HS FeatureSelectionOPF_IHS FeatureSelectionOPF_LOA FeatureSelectionOPF_MBO FeatureSelectionOPF_PSFHS FeatureSelectionOPF_WCA FeatureSelectionHamming RBM TensorRBM DropoutRBM DropconnectRBM DRBM DropoutDRBM GaussianDRBM DropoutGaussianDRBM EPNN GaussianRBM DropoutGaussianRBM LinearRegression LogisticRegression
 
 libdev: $(LIB)/libdev.a
 	echo "libdev.a built..."
@@ -153,6 +153,10 @@ FeatureSelectionOPF_FPA: examples/FeatureSelection/FeatureSelectionOPF_FPA.c
 	$(CC) $(FLAGS) examples/FeatureSelection/FeatureSelectionOPF_FPA.c -o examples/bin/FeatureSelectionOPF_FPA -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
     -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt -lgsl -lgslcblas -lm;
 
+FeatureSelectionOPF_GA: examples/FeatureSelection/FeatureSelectionOPF_GA.c
+	$(CC) $(FLAGS) examples/FeatureSelection/FeatureSelectionOPF_GA.c -o examples/bin/FeatureSelectionOPF_GA -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt -lgsl -lgslcblas -lm;
+
 FeatureSelectionOPF_GP: examples/FeatureSelection/FeatureSelectionOPF_GP.c
 	$(CC) $(FLAGS) examples/FeatureSelection/FeatureSelectionOPF_GP.c -o examples/bin/FeatureSelectionOPF_GP -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
     -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt -lgsl -lgslcblas -lm;
@@ -167,6 +171,10 @@ FeatureSelectionOPF_HS: examples/FeatureSelection/FeatureSelectionOPF_HS.c
 
 FeatureSelectionOPF_IHS: examples/FeatureSelection/FeatureSelectionOPF_IHS.c
 	$(CC) $(FLAGS) examples/FeatureSelection/FeatureSelectionOPF_IHS.c -o examples/bin/FeatureSelectionOPF_IHS -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
+    -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt -lgsl -lgslcblas -lm;
+
+FeatureSelectionOPF_LOA: examples/FeatureSelection/FeatureSelectionOPF_LOA.c
+	$(CC) $(FLAGS) examples/FeatureSelection/FeatureSelectionOPF_LOA.c -o examples/bin/FeatureSelectionOPF_LOA -I $(INCLUDE) -I $(OPF_DIR)/include -I $(OPF_DIR)/include/util \
     -I $(LIBDEEP_DIR)/include -I $(OPT_DIR)/include -I /usr/local/include -L $(LIB) -L $(LIBDEEP_DIR)/lib -L $(OPT_DIR)/lib -L $(OPF_DIR)/lib -ldev -lDeep -lOPF -lopt -lgsl -lgslcblas -lm;
 
 FeatureSelectionOPF_MBO: examples/FeatureSelection/FeatureSelectionOPF_MBO.c
